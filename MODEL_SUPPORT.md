@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | Qwen2.5-3B-Instruct | Confirmed. Moving the bridge state moved both a later hidden state and the full next-token output. Cutting bridge access removed the measured history difference. | SAME/DIFFERENT; DAX/WUG |
 | Mistral-7B-Instruct-v0.3 | Confirmed. The same pattern appeared in a second model family. Cutting bridge access removed the measured history difference. | SAME/DIFFERENT |
+| OLMo-2-1124-7B-Instruct | Third-family extension: apparatus smoke passed; larger run pending. | SAME/DIFFERENT |
 | Qwen2.5-0.5B-Instruct | The model did not pass the task-performance check used during development, so no history conclusion was drawn from it. | early task versions |
 | Phi-3.5-mini-instruct | The exploratory code hit a cache API incompatibility before the scientific test ran. | — |
 

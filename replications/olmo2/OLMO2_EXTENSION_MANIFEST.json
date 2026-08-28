@@ -1,0 +1,20 @@
+{
+  "manifest_version": "olmo2-extension-v1",
+  "arm": "olmo2_extension",
+  "model": "allenai/OLMo-2-1124-7B-Instruct",
+  "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+  "task": "same_different",
+  "episodes": 256,
+  "seed": 20260828,
+  "patched_layers": [0, 1, 2, 3, 4, 5],
+  "outcome_layer": 8,
+  "bootstrap_draws": 10000,
+  "bootstrap_seeds": [20260929, 20260930, 20260931, 20260932],
+  "files": {
+    "scripts/run_olmo2_extension.py": "1eeffd886f88b7d914bcf203893ae0f9d2c7be048b865d207102389ca1ab9dae",
+    "replications/olmo2/OLMO2_EXTENSION_PROTOCOL.md": "83e797f5161313f1d6e58d0b89b84c39e0b80aafa5a0bbd9e320121eab45fa23",
+    "configs/olmo2_extension.json": "a2a4f5f59a1646f4d3e526ae650ace4aeb0297e909804a205212bba23f5d1cec"
+  },
+  "status": "frozen_before_run",
+  "scientific_boundary": "This is a third-family extension, separate from frozen v11; it does not establish phenomenal consciousness."
+}

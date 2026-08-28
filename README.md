@@ -99,6 +99,14 @@ chb-v11
 
 This prints the frozen endpoint values, job IDs, and bridge-cut results stored with the package.
 
+To verify the exact v11 reproduction files without downloading model weights:
+
+```bash
+python scripts/reproduce_v11.py
+```
+
+The exact frozen runners, analysis, protocols, seed manifests, and final logs are in [`confirmatory/v11/`](confirmatory/v11/). The helper checks their hashes before any model run. Use `--run` only on a GPU with access to the pinned model revisions.
+
 ## What is in this repo
 
 - [`BENCHMARK.md`](BENCHMARK.md) — exactly what the test does and what controls are required

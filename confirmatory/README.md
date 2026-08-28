@@ -55,4 +55,18 @@ See:
 
 `scripts/reference_interchange.py` is the small public test. It is useful for trying the method on a compatible model.
 
-The exact v11 runners, analysis code, manifests, and protocol records are being kept separately in this folder so the quick test cannot be confused with the experiment that produced the frozen numbers.
+The exact v11 runners, analysis code, manifests, protocols, and final logs are in [`v11/`](v11/). The packages there are unchanged copies of the files used for the frozen study.
+
+To verify the package locks without downloading model weights:
+
+```bash
+python scripts/reproduce_v11.py
+```
+
+To run the frozen experiment on a GPU, after checking model access and installing the pinned requirements:
+
+```bash
+python scripts/reproduce_v11.py --run --output v11-reproduction-output
+```
+
+The helper checks every recorded file hash before it starts. It writes new logs to the chosen output directory and never overwrites the published results.
