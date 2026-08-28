@@ -1,0 +1,29 @@
+{
+  "analysis_sha256": "188243e5b4d3e3dd8d0bd73f0e1d30e795072459ffd1c03adb60678508ca8ba9",
+  "arms": {
+    "mistral_replication": {
+      "bootstrap_seed": 7690843415854633185,
+      "episode_seed": 9221785005089235772,
+      "randomisation_seed": 528110630778964379,
+      "reference_seed": 6028330569527511030
+    },
+    "qwen_primary": {
+      "bootstrap_seed": 5742271670354831254,
+      "episode_seed": 6619351507749680266,
+      "randomisation_seed": 9005173462913795368,
+      "reference_seed": 5291049459948064749
+    },
+    "qwen_secondary": {
+      "bootstrap_seed": 5181573960645047353,
+      "episode_seed": 5995309790706051604,
+      "randomisation_seed": 8066008148769853129,
+      "reference_seed": 7911458219485545594
+    }
+  },
+  "created_utc": "2026-08-27T19:42:55.830599+00:00",
+  "entropy_source": "Python secrets.randbits using operating-system entropy",
+  "manifest_sha256": "fb42c0f7e984c8e775b55960eb5c7f9be02d6eff8944bcdb198223435764a7d2",
+  "protocol_sha256": "1fc2ff9ae7944fc426d57afee113531a92fa8ceed61c2a95d3dc47e8e082ad67",
+  "requirements_sha256": "5fd7fcfeece3486c2137b6432c9d20c185cb211ec56afbe21eca9dbc5e986133",
+  "runner_sha256": "f2726b9c5486ec62791db3569e0e54c116aecd748ae54ce8335e1d81bf061ff7"
+}

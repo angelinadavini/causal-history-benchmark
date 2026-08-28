@@ -1,0 +1,24 @@
+{
+  "analysis_sha256": "95d92f3e5c3764a98417e3e54d5d57eba3e76e8fa8b4331ad6e836aaabcb4849",
+  "arms": {
+    "qwen_secondary": {
+      "bootstrap_seed": 158895474005646925,
+      "episode_seed": 4205907893614463230,
+      "randomisation_seed": 736196522975504091,
+      "reference_seed": 785380502414014889
+    }
+  },
+  "base_manifest_file_sha256": "dd4c001bc2f53488034af2d3b717b0a1f2d9fa9133e346a15e1f1433e0f8f198",
+  "base_v2_manifest_sha256": "fb42c0f7e984c8e775b55960eb5c7f9be02d6eff8944bcdb198223435764a7d2",
+  "created_utc": "2026-08-27T23:26:42.539796+00:00",
+  "entropy_source": "Python secrets.randbits using operating-system entropy",
+  "invalid_secondary_job": "6a90938c45686a1580c0f60c",
+  "manifest_sha256": "570f3119f16b32942c0bae5fdbdeb8396311a76c3bb8fed1b6eea577fc69cb54",
+  "protocol_sha256": "b05844cb4cb85a4c026217e9cec48448a794966857de87541b782fc6d8e31934",
+  "requirements_sha256": "5fd7fcfeece3486c2137b6432c9d20c185cb211ec56afbe21eca9dbc5e986133",
+  "runner_sha256": "a4ed93c03cf2a4997c2f0da28f812f0f149fa6b0141a2134d0446bcba5a607fd",
+  "sealed_v2_jobs": {
+    "mistral_replication": "6a9093b3984507d9db4e8d7d",
+    "qwen_primary": "6a90939f45686a1580c0f60e"
+  }
+}
