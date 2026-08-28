@@ -1,68 +1,78 @@
-# Confirmatory results
+# Confirmed results
 
-The frozen confirmatory prediction passed in the primary Qwen arm, the Mistral cross-model arm, and the Qwen DAX/WUG second-task arm.
+The frozen v11 study passed in Qwen, replicated in Mistral, and replicated again on a second DAX/WUG task.
 
-## Design
+## What was tested
 
-The same usable relation was acquired through examples or direct instruction.
+The model learned the same rule in two ways: from examples or from a direct instruction.
 
-The source-history prefix was replaced with neutral-history K/V state. The current task relation was supplied again during the later event. Acquisition route remained only in the fixed bridge state.
+Before the later test, the K/V state for the original teaching material was replaced with matched neutral K/V. The same rule was then supplied again during the later event. The only state left that still depended on how the rule had been learned was the fixed bridge.
 
-Early bridge K/V from the opposite route was then interchanged. The matched control used a donor from the same route. Reported effects are cross-route movement minus same-route movement.
+We moved the bridge K/V from one learning history into the other condition and measured what happened later. Each cross-history swap was compared with a matched same-history swap.
 
-## Frozen arms
+The reported effect is:
 
-| Arm | Model | Task | Episodes |
+```text
+cross-history movement - same-history movement
+```
+
+## The three frozen tests
+
+| Test | Model | Task | Episodes |
 | --- | --- | --- | ---: |
 | Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 |
-| Cross-model replication | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 |
-| Second-task replication | Qwen2.5-3B-Instruct | DAX/WUG | 256 |
+| Second model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 |
+| Second task | Qwen2.5-3B-Instruct | DAX/WUG | 256 |
 
-## Primary endpoints
+## Main results
 
-| Arm | Outcome | Mean net movement | 95% CI | Positive episodes | Paired sign-flip p |
+| Test | Measure | Mean movement | 95% CI | Positive episodes | Sign-flip p |
 | --- | --- | ---: | --- | ---: | ---: |
 | Qwen primary | Later hidden state | **0.68747** | [0.68661, 0.68832] | 100.0% | 0.000010 |
-| Qwen primary | Complete logit vector | **0.25833** | [0.25555, 0.26109] | 100.0% | 0.000010 |
-| Mistral replication | Later hidden state | **0.80099** | [0.79955, 0.80245] | 100.0% | 0.000010 |
-| Mistral replication | Complete logit vector | **0.05865** | [0.05681, 0.06056] | 100.0% | 0.000010 |
-| DAX/WUG replication | Later hidden state | **0.60515** | [0.60352, 0.60679] | 100.0% | 0.000010 |
-| DAX/WUG replication | Complete logit vector | **0.04717** | [0.04335, 0.05106] | 89.45% | 0.000010 |
+| Qwen primary | Full next-token logits | **0.25833** | [0.25555, 0.26109] | 100.0% | 0.000010 |
+| Mistral | Later hidden state | **0.80099** | [0.79955, 0.80245] | 100.0% | 0.000010 |
+| Mistral | Full next-token logits | **0.05865** | [0.05681, 0.06056] | 100.0% | 0.000010 |
+| DAX/WUG | Later hidden state | **0.60515** | [0.60352, 0.60679] | 100.0% | 0.000010 |
+| DAX/WUG | Full next-token logits | **0.04717** | [0.04335, 0.05106] | 89.45% | 0.000010 |
 
-A route-axis value of one means full movement from the recipient state to the unpatched opposite-route state along that episode's route axis. Zero means no movement along that axis.
+A value of `1` would mean that the patched result moved all the way to the unpatched state produced by the other learning history along that episode's history axis. A value of `0` means no movement along that axis.
 
-## Bridge-path intervention
+All six frozen primary endpoints passed.
 
-Removing later-event attention to every bridge position reduced the hidden-state route distance to **0.000** in all three arms.
+## What happened when the bridge was cut
 
-The complete-logit route distance also fell to **0.000** in all three arms.
+We blocked the later event from attending to every bridge position.
 
-Within this implementation, access to the retained bridge is necessary for the measured route difference.
+The hidden-state history distance fell to **0.000** in Qwen, Mistral, and DAX/WUG.
 
-## Content and wording transfer
+The full-logit history distance also fell to **0.000** in all three tests.
 
-Reference route centroids used acquisition templates 0–2 in one content mode. Evaluation used template 3 in the opposite content mode.
+So in this setup, the later difference depended on access to the bridge.
 
-| Model | Unpatched route classification | Donor-route classification after interchange |
+## Wording and rule-content check
+
+The reference centroids were built from templates 0–2 in one rule-content condition. Template 3 was tested with the opposite rule content.
+
+| Model | History classification before patch | Donor-history classification after patch |
 | --- | ---: | ---: |
 | Qwen2.5-3B-Instruct | 83.50% | 75.59% |
 | Mistral-7B-Instruct-v0.3 | 91.99% | 79.88% |
 
-Template 3 was held out from reference-centroid estimation in the confirmatory run. It had been inspected during exploratory development, so it is not described as investigator-unseen wording.
+Template 3 was not used to build the confirmatory centroids. It had been seen during earlier development, so it is not described as completely unseen wording.
 
-## Answer endpoints
+## Answer-level measures
 
-The answer endpoints were secondary.
+These were secondary measures.
 
-| Arm | Signed margin movement, 90% CI | Two-token probability movement, 90% CI | Frozen equivalence decision |
+| Test | Correct-answer margin movement, 90% CI | Two-token probability movement, 90% CI | Frozen equivalence result |
 | --- | --- | --- | --- |
 | Qwen primary | 0.45166 [0.43629, 0.46694] | 0.00562 [0.00467, 0.00658] | Failed |
-| Mistral replication | 0.01162 [0.01093, 0.01231] | 0.00232 [0.00216, 0.00248] | Passed |
-| DAX/WUG replication | -0.04874 [-0.05872, -0.03870] | -0.01116 [-0.01320, -0.00912] | Passed |
+| Mistral | 0.01162 [0.01093, 0.01231] | 0.00232 [0.00216, 0.00248] | Passed |
+| DAX/WUG | -0.04874 [-0.05872, -0.03870] | -0.01116 [-0.01320, -0.00912] | Passed |
 
-The Qwen correct-answer margin exceeded the frozen ±0.20-logit equivalence bound. No choice-flip rule was frozen. The confirmed output claim concerns movement of the complete next-token distribution. The study does not establish a robust overt-choice effect.
+The Qwen correct-answer margin was outside the frozen ±0.20-logit equivalence range. No choice-flip rule had been frozen. The confirmed output result is therefore about movement of the complete next-token distribution. It is not a robust overt-choice result.
 
-## Frozen provenance
+## Frozen job record
 
 Valid Hugging Face jobs:
 
@@ -75,22 +85,20 @@ Frozen manifest hashes:
 - base v2: `fb42c0f7e984c8e775b55960eb5c7f9be02d6eff8944bcdb198223435764a7d2`
 - secondary v2.1: `570f3119f16b32942c0bae5fdbdeb8396311a76c3bb8fed1b6eea577fc69cb54`
 
-## Preserved failures
+## Failed attempts kept in the record
 
-The public record keeps failures that affected the design:
+These are kept because they changed how the final experiment was built:
 
-- the verbal source-attribution instrument failed through response bias;
-- learned-direction steering did not selectively alter answer logits beyond a matched random perturbation;
-- a fixed untrained bridge often retained decodable information without reliably governing the next answer;
-- Qwen2.5-0.5B-Instruct was below task capacity;
-- one-pass sparse attention masking degraded direct-source performance and was rejected as the main apparatus;
-- the first confirmatory launch was invalidated before scientific output because a tokenizer assumption failed on Mistral;
-- the first DAX/WUG confirmatory attempt stopped on its first episode because appending `X` changed the query-token boundary.
+- the verbal source question failed because the model fell into a response bias;
+- learned-direction steering did not move answer logits more selectively than a matched random change;
+- a fixed untrained bridge could store readable information without reliably controlling the next answer;
+- Qwen2.5-0.5B-Instruct could not reliably do the task;
+- one sparse-attention masking setup damaged normal task performance and was dropped;
+- the first confirmatory launch was stopped before scientific output was inspected because a tokenizer assumption failed on Mistral;
+- the first DAX/WUG confirmatory attempt stopped on its first episode because adding `X` changed the query-token boundary.
 
-These failures are not counted as scientific nulls when the apparatus failed its own controls.
+An apparatus failure is not counted as evidence for or against the scientific claim.
 
-## Current safe claim
+## The result in plain English
 
-> In Qwen2.5-3B-Instruct, acquisition route left a retained bridge state after source-history neutralisation. Exchanging early bridge K/V between acquisition routes causally moved a fixed later hidden state and the complete next-token logit vector toward the donor history after the current task relation was supplied again. The effect replicated in Mistral-7B-Instruct-v0.3 and in a separate DAX/WUG mapping task. Removing later-event access to the bridge eliminated the measured route difference.
-
-The result does not establish consciousness.
+> The way the model learned the same information earlier changed what happened later. The original source state had been removed and the same current rule had been supplied again. Moving the bridge state left by one learning history into the other condition moved both a later hidden state and the complete next-token output toward the history that supplied the bridge. The result replicated in another model family and another task. When the bridge could no longer be used, the measured history difference disappeared.
