@@ -1,96 +1,95 @@
-# Roadmap
+# What comes next
 
-The first frozen confirmatory benchmark has passed. The priority now is reuse, independent replication, and architecture coverage.
+The first frozen CHB result is confirmed. The next job is to make the test easy for other people to find, run, and extend.
 
-## 1. Make the benchmark easy to run
+## 1. Finish exact v11 reproduction
 
-Current public pieces:
+The public repo already has the small reusable runner and the frozen result record.
 
-- benchmark contract;
-- compact Qwen reference implementation;
-- confirmed Qwen and Mistral results;
-- machine-readable confirmatory summary;
-- quickstart;
-- contribution guide;
-- public replication leaderboard.
+The exact v11 runner, analysis code, manifests, and public-safe result files should also live here so another researcher can reproduce the confirmed study without guessing which development script was used.
 
-Next packaging work:
+The exact reproduction command should check the frozen hashes before it runs.
 
-- publish the exact frozen confirmatory runners and manifests;
-- add a small command-line wrapper that writes a standard result JSON;
-- add automated preflight checks for token boundaries and supported cache APIs;
-- add a reproducible environment container.
+## 2. Put CHB where ML researchers already look
 
-## 2. Independent model-family replications
+GitHub is the code home.
 
-High-value targets:
+The next public layer is Hugging Face:
+
+- a public CHB benchmark dataset;
+- a clear dataset card;
+- `eval.yaml` so Hugging Face can recognise it as a benchmark;
+- model-result files that can appear on model pages and feed the CHB leaderboard;
+- a public Space that shows the result table and gives people a simple way into the benchmark.
+
+After that, freeze a release on Zenodo so every benchmark version can be cited with a DOI.
+
+The paper should point to the benchmark. The benchmark should remain useful without the paper.
+
+## 3. Test more model families
+
+The current confirmed result covers Qwen and Mistral.
+
+The next strong tests are:
 
 - Gemma;
 - Llama-family models;
-- additional Qwen and Mistral sizes;
-- other open decoder-only models.
+- other Qwen and Mistral sizes;
+- another open model family with a different implementation.
 
-The main goal is to learn where the effect replicates, where it weakens, and where it fails under working controls.
+We want to know where the effect repeats, where it gets weaker, and where it disappears when the experiment itself still works.
 
-## 3. Leave transformer K/V
+## 4. Test systems that do not use transformer K/V
 
-The strongest extension is an architecture whose continuing state is not transformer K/V.
+This is one of the most important extensions.
 
-Targets include:
+Possible targets:
 
-- state-space language models;
+- state-space models;
 - recurrent language models;
 - explicit-memory systems;
-- trained context-compression systems;
-- multimodal agents with persistent internal state.
+- learned context-compression systems;
+- multimodal agents that carry state forward.
 
-The state object can change. The causal question stays the same.
+The stored state can be different. The question stays the same: after the original source is gone and the same current information is available, does how the information entered earlier still change what happens next?
 
-## 4. New acquisition histories
+## 5. Change the learning histories
 
-Examples versus direct instruction is the first controlled route pair.
+Examples versus direct instruction is only the first pair.
 
-Future benchmark modules can test:
+Other useful comparisons include:
 
-- observation versus explicit instruction;
-- self-generated inference versus supplied conclusion;
-- retrieved context versus internally learned relation;
-- correction versus first acquisition;
-- demonstration sequence variants that end with the same usable rule.
+- seeing something versus being told it;
+- reaching a conclusion yourself versus being given the conclusion;
+- retrieving information versus already having it in the model;
+- first learning versus correction;
+- different teaching sequences that end with the same usable rule.
 
-Each module must preserve a clean current-content control.
+Each test still has to make the current information the same before asking whether the earlier route changes what happens later.
 
-## 5. Time and interference
+## 6. Add time and interference
 
-Test whether route-dependent causal history survives:
+Test what happens when more is placed between the learning event and the later event:
 
-- longer token delays;
-- unrelated intervening events;
-- competing relations;
+- longer delays;
+- unrelated material;
+- competing rules;
 - context compression;
 - state resets;
-- memory retrieval boundaries.
+- memory retrieval.
 
-## 6. Source attribution
+This tells us how long the history effect lasts and what destroys it.
 
-The first verbal source-report instrument failed through response bias and is excluded.
+## 7. Build a better source-history measure
 
-A replacement should use bias-resistant response coding, tokenizer preflight, counterbalanced labels, and measurement after the later-event endpoint.
+The first verbal source question failed because the model fell into a response bias.
 
-## 7. Public distribution
+A new source-history measure should avoid relying on the model simply choosing between verbal labels such as “examples” and “instruction.” It should be designed so a response habit cannot look like source knowledge.
 
-The repository should remain the canonical development home.
+## 8. Make outside results easy to add
 
-Planned distribution layers:
+A researcher who runs CHB should be able to submit one result file, one reproducible script, and one short explanation.
 
-- Hugging Face benchmark dataset and dataset card;
-- standard model-result JSON files;
-- tagged GitHub releases;
-- archival DOI for frozen benchmark versions;
-- community leaderboard linked to reproducible code.
+The public leaderboard should include positive results, clean negative results, and setup failures in separate places so nobody has to guess what happened.
 
-The aim is for researchers to run the benchmark without needing the paper.
-
-## 8. Publication
-
-Conference publication remains useful for peer review and formal argument. The benchmark should remain usable even if a reader never opens the paper.
+The goal is simple: if somebody tests a new model next year, they should have a clear place to put the result and a clear earlier result to compare it with.
