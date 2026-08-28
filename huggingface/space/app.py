@@ -1,4 +1,11 @@
 import gradio as gr
+import spaces
+
+
+@spaces.GPU
+def _zero_gpu_compatibility_probe():
+    """Keep the app compatible with Hugging Face's free ZeroGPU runtime."""
+    return None
 
 RESULTS = [
     ["Qwen2.5-3B-Instruct", "SAME/DIFFERENT", 512, "0.68747 [0.68661, 0.68832]", "0.25833 [0.25555, 0.26109]", "0"],
