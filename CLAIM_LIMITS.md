@@ -1,67 +1,47 @@
-# Claim limits
+# What the v11 result shows
 
-## Supported by the frozen v11 confirmatory study
+The frozen v11 study supports this result:
 
-The evidence supports this claim:
+> The way the model learned the same information earlier changed what happened later. The original teaching state was removed. The same current rule was supplied again. Moving the bridge state left by one learning history into the other condition moved both a later hidden state and the complete next-token output toward the history that supplied the bridge. The result replicated in Mistral and in a second DAX/WUG task. When the later query could no longer use the bridge, the measured history difference disappeared.
 
-> In Qwen2.5-3B-Instruct, acquisition route left a retained bridge state after source-history neutralisation. Exchanging early bridge K/V between acquisition routes causally moved both a fixed later hidden state and the complete next-token logit vector toward the donor history after the current task relation was supplied again. The effect replicated in Mistral-7B-Instruct-v0.3 and in a separate DAX/WUG mapping task.
+That is the result CHB is built to test in other models.
 
-The bridge-path intervention supports a carrier claim inside this implementation: the measured route difference disappeared when later tokens could not attend to the bridge.
+## Where the current evidence stops
 
-The SAME/DIFFERENT results also support transfer across task-content mode and evaluation wording at the fixed hidden layer. The evaluation wording was held out from confirmatory centroid estimation and had been inspected during development.
+The confirmed study used two decoder-only transformer families and two controlled relation tasks.
 
-## Unsupported
+It did not test:
 
-Do not use this benchmark result to claim:
+- every language model;
+- non-transformer architectures;
+- unrestricted delays or long chains of intervening events;
+- whether bridge K/V is comparable to any specific human neural state.
 
-- consciousness;
-- sentience;
-- phenomenal experience;
-- subjective continuity;
-- a unique criterion for consciousness;
-- a general result for every language model or artificial system;
-- a robust overt-choice effect;
-- valid verbal source attribution;
-- equivalence between transformer bridge K/V and human experience;
-- independence from transformer K/V architecture;
-- persistence across unrestricted delays or intervening events;
-- investigator-unseen wording.
+The answer endpoint also has a clear limit. In the primary Qwen arm, the correct-answer margin moved 0.45166 logits toward the donor history, with a 90% CI of [0.43629, 0.46694]. That failed the frozen ±0.20-logit equivalence rule. No choice-flip rule was frozen. The confirmed output result is therefore movement of the complete next-token distribution, not a robust overt-choice claim.
 
-## Answer endpoint
+The attempted verbal source question also failed because the model showed a strong response bias. CHB does not use that measure as evidence of source attribution.
 
-The Qwen primary correct-answer margin moved 0.45166 logits toward the donor, with a 90% CI of [0.43629, 0.46694]. That interval lies outside the frozen ±0.20-logit equivalence bound.
+## What CHB is new for
 
-The two-token probability movement was 0.00562 [0.00467, 0.00658], inside its ±0.05 bound.
+Earlier work already showed that models can keep information in K/V state, that prompt history can affect answers, that internal state can reveal where information came from, that task directions can be found and moved, and that models can sometimes report information about their own processing.
 
-No choice-flip rule was frozen. State only that the complete output distribution moved and that the Qwen secondary margin endpoint was not negligible under the frozen rule.
-
-Mistral and DAX/WUG met both answer-endpoint equivalence rules.
-
-## Prior-work boundary
-
-The benchmark does not claim discovery of:
-
-- K/V leakage after text removal;
-- generic prompt-history effects;
-- decodability of retained state;
-- task or function vectors;
-- machine introspection;
-- source-provenance signatures;
-- temporal continuity as a proposed AI-consciousness requirement;
-- consciousness-theory indicators for AI.
-
-The contribution is the controlled causal sequence:
+CHB tests a different sequence in one controlled experiment:
 
 ```text
-same usable relation
--> different acquisition route
--> source prefix neutralised
--> current relation supplied again
--> retained bridge state interchanged
--> later hidden state and full logit distribution move toward donor history
--> bridge access removed and route difference disappears
+same rule
+-> learned in two different ways
+-> original source state removed
+-> same current rule supplied again
+-> retained bridge state moved between learning histories
+-> later hidden state and full output move toward the donor history
+-> bridge access removed
+-> measured history difference disappears
 ```
 
-## Community extensions
+That sequence is the contribution.
 
-A result from another model or architecture inherits only the claim supported by its own controls. A replication should not be described as a consciousness result unless an independent validated consciousness criterion exists. This repository currently contains no such criterion.
+## Consciousness
+
+CHB does not produce a consciousness score.
+
+The benchmark can be used in research on AI consciousness because the experiment asks whether what happened earlier can change the state from which something later is processed. Any stronger consciousness claim has to come from the theory and evidence being tested around that result, not from a CHB number by itself.
