@@ -9,7 +9,7 @@ repository-code: "https://github.com/angelinadavini/causal-history-benchmark"
 license: MIT
 version: 0.1.0
 date-released: 2026-08-28
-abstract: "A mechanistic benchmark for testing whether the route by which the same usable information entered an AI model leaves a retained causal state that changes later processing after the original source is neutralised and current task content is controlled."
+abstract: "A benchmark for testing whether the way the same usable information entered an AI model leaves a state that changes later processing after the original source is removed and the current task information is held fixed."
 keywords:
   - mechanistic interpretability
   - causal intervention

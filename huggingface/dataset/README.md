@@ -32,6 +32,14 @@ The test also cuts access to the bridge. If the later difference depends on that
 
 The full confidence intervals and frozen job record are in the public GitHub repository.
 
+## Separate OLMo-2 extension
+
+The later OLMo-2 extension is recorded separately from the frozen v11 table.
+Its hidden-state movement was 0.58722 (95% CI [0.58430, 0.59009]) after the
+same-history control. Its full-logit movement was 0.03286 (95% CI [-0.03762,
+0.10720]), so that endpoint is inconclusive. Both bridge-cut distances were
+zero. The raw log and all 256 records are linked from the GitHub repository.
+
 ## The result
 
 > The way the model learned the same information earlier changed what happened later. The original teaching state was gone. The same current rule was supplied again. Moving the state left by the earlier learning moved the later computation. Blocking access to that state removed the difference.
