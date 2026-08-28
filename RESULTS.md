@@ -1,121 +1,96 @@
-# Current development results
+# Confirmatory results
 
-These results are exploratory development results. They are preserved publicly for auditability and will not be treated as confirmatory evidence until the final protocol is frozen and rerun on fresh seeds.
+The frozen confirmatory prediction passed in the primary Qwen arm, the Mistral cross-model arm, and the Qwen DAX/WUG second-task arm.
 
-## Qwen2.5-3B-Instruct
+## Design
 
-### Held-out template route test
+The same usable relation was acquired through examples or direct instruction.
 
-A route direction was learned from three example/direct-instruction templates and tested on a fourth held-out template.
+The source-history prefix was replaced with neutral-history K/V state. The current task relation was supplied again during the later event. Acquisition route remained only in the fixed bridge state.
 
-The original source prefix was neutralized. The same fixed bridge tokens remained. The current SAME/DIFFERENT instruction was supplied again during the later event.
+Early bridge K/V from the opposite route was then interchanged. The matched control used a donor from the same route. Reported effects are cross-route movement minus same-route movement.
 
-Later hidden-state route classification:
+## Frozen arms
 
-| Later layer | Baseline route identification | Learned route intervention -> donor | Matched random -> donor |
-|---|---:|---:|---:|
-| 8 | 96.9% | 100.0% | 0.0% |
-| 18 | 99.2% | 53.1% | 25.0% |
-| 28 | 99.2% | 29.7% | 6.3% |
-| 36 | 98.4% | 28.9% | 8.6% |
+| Arm | Model | Task | Episodes |
+| --- | --- | --- | ---: |
+| Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 |
+| Cross-model replication | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 |
+| Second-task replication | Qwen2.5-3B-Instruct | DAX/WUG | 256 |
 
-The strongest causal effect appears early in processing of the later event.
+## Primary endpoints
 
-### Strict cross-content test
+| Arm | Outcome | Mean net movement | 95% CI | Positive episodes | Paired sign-flip p |
+| --- | --- | ---: | --- | ---: | ---: |
+| Qwen primary | Later hidden state | **0.68747** | [0.68661, 0.68832] | 100.0% | 0.000010 |
+| Qwen primary | Complete logit vector | **0.25833** | [0.25555, 0.26109] | 100.0% | 0.000010 |
+| Mistral replication | Later hidden state | **0.80099** | [0.79955, 0.80245] | 100.0% | 0.000010 |
+| Mistral replication | Complete logit vector | **0.05865** | [0.05681, 0.06056] | 100.0% | 0.000010 |
+| DAX/WUG replication | Later hidden state | **0.60515** | [0.60352, 0.60679] | 100.0% | 0.000010 |
+| DAX/WUG replication | Complete logit vector | **0.04717** | [0.04335, 0.05106] | 89.45% | 0.000010 |
 
-The route direction was learned within one content mode only and tested on the opposite content mode using the held-out surface template. Twenty random controls were used.
+A route-axis value of one means full movement from the recipient state to the unpatched opposite-route state along that episode's route axis. Zero means no movement along that axis.
 
-At layer 8:
+## Bridge-path intervention
 
-- train SAME, test DIFFERENT: donor-route steering = **100%**; mean random donor rate = **14.3%**;
-- train DIFFERENT, test SAME: donor-route steering = **100%**; mean random donor rate = **8.0%**.
+Removing later-event attention to every bridge position reduced the hidden-state route distance to **0.000** in all three arms.
 
-This test reduces the possibility that the direction is only encoding the specific SAME/DIFFERENT task content.
+The complete-logit route distance also fell to **0.000** in all three arms.
 
-### Direct interchange localization
+Within this implementation, access to the retained bridge is necessary for the measured route difference.
 
-Bridge K/V state was swapped one early layer at a time and cumulatively. Outcome was measured at later layer 8.
+## Content and wording transfer
 
-| Patched bridge state | Cross-route projection | Same-route control |
-|---|---:|---:|
-| layer 1 | 0.008 | 0.0006 |
-| layer 2 | 0.102 | 0.0006 |
-| layer 3 | 0.358 | 0.0008 |
-| layer 4 | 0.139 | 0.0005 |
-| layer 5 | 0.038 | 0.0003 |
-| cumulative 0-3 | 0.468 | 0.0011 |
-| cumulative 0-4 | 0.608 | 0.0007 |
-| cumulative 0-5 | **0.646** | **0.0009** |
+Reference route centroids used acquisition templates 0–2 in one content mode. Evaluation used template 3 in the opposite content mode.
 
-For cumulative layers 0-2 through 0-5, all 64 pairs moved in the cross-route direction.
+| Model | Unpatched route classification | Donor-route classification after interchange |
+| --- | ---: | ---: |
+| Qwen2.5-3B-Instruct | 83.50% | 75.59% |
+| Mistral-7B-Instruct-v0.3 | 91.99% | 79.88% |
 
-### Second task: DAX / WUG mapping
+Template 3 was held out from reference-centroid estimation in the confirmatory run. It had been inspected during exploratory development, so it is not described as investigator-unseen wording.
 
-A second task used arbitrary DAX/WUG mappings with X/Y outputs. The source prefix was neutralized and the current mapping was supplied again during the later event.
+## Answer endpoints
 
-On 64 pairs:
+The answer endpoints were secondary.
 
-- cross-route projection: **0.569**;
-- same-route control: **0.0013**;
-- cross-route positive direction: **64/64**;
-- mean later route-state distance: **1.179**.
+| Arm | Signed margin movement, 90% CI | Two-token probability movement, 90% CI | Frozen equivalence decision |
+| --- | --- | --- | --- |
+| Qwen primary | 0.45166 [0.43629, 0.46694] | 0.00562 [0.00467, 0.00658] | Failed |
+| Mistral replication | 0.01162 [0.01093, 0.01231] | 0.00232 [0.00216, 0.00248] | Passed |
+| DAX/WUG replication | -0.04874 [-0.05872, -0.03870] | -0.01116 [-0.01320, -0.00912] | Passed |
 
-This is an independent task-level replication inside the same Qwen model.
+The Qwen correct-answer margin exceeded the frozen ±0.20-logit equivalence bound. No choice-flip rule was frozen. The confirmed output claim concerns movement of the complete next-token distribution. The study does not establish a robust overt-choice effect.
 
-## Mistral-7B-Instruct-v0.3
+## Frozen provenance
 
-A first cross-model replication used 4-bit NF4 quantization on Mistral-7B-Instruct-v0.3.
+Valid Hugging Face jobs:
 
-Bridge K/V state from layers 0-4 was swapped between example-history and direct-history runs. The later event was measured at layer 7.
+- Qwen primary: `6a90939f45686a1580c0f60e`
+- Mistral replication: `6a9093b3984507d9db4e8d7d`
+- amended Qwen DAX/WUG: `6a90c7e345686a1580c0fe2a`
 
-On 64 pairs:
+Frozen manifest hashes:
 
-- mean cross-route projection: **0.809**;
-- median cross-route projection: **0.809**;
-- same-route control: **0.031**;
-- cross-route positive direction: **64/64**;
-- mean relative distance from patched state to donor target: **0.385**.
+- base v2: `fb42c0f7e984c8e775b55960eb5c7f9be02d6eff8944bcdb198223435764a7d2`
+- secondary v2.1: `570f3119f16b32942c0bae5fdbdeb8396311a76c3bb8fed1b6eea577fc69cb54`
 
-This result shows the effect is not confined to Qwen2.5-3B-Instruct.
+## Preserved failures
 
-A full-precision Mistral replication was queued later and did not complete; the public claim currently rests on the completed 4-bit Mistral development run.
+The public record keeps failures that affected the design:
 
-## Earlier state-retention result
+- the verbal source-attribution instrument failed through response bias;
+- learned-direction steering did not selectively alter answer logits beyond a matched random perturbation;
+- a fixed untrained bridge often retained decodable information without reliably governing the next answer;
+- Qwen2.5-0.5B-Instruct was below task capacity;
+- one-pass sparse attention masking degraded direct-source performance and was rejected as the main apparatus;
+- the first confirmatory launch was invalidated before scientific output because a tokenizer assumption failed on Mistral;
+- the first DAX/WUG confirmatory attempt stopped on its first episode because appending `X` changed the query-token boundary.
 
-In a separate probe experiment using Qwen2.5-3B-Instruct, a random five-digit code appeared before a fixed bridge. Linear probes were trained only on K/V state from the final bridge token.
-
-Ten-way chance was 10% per digit.
-
-Best layer mean digit accuracy: **57.7%**.
-
-Individual digit accuracies at layer 34:
-
-- 80.0%;
-- 60.0%;
-- 36.7%;
-- 43.3%;
-- 68.3%.
-
-One digit reached 95% at layer 35.
-
-This result is used only to show that source information can remain decodable in downstream state. KV information persistence itself is already established in prior work and is not a novelty claim of this benchmark.
-
-## Failed development tests preserved on purpose
-
-Several tests failed and changed the design:
-
-- Qwen2.5-0.5B-Instruct was below task capacity.
-- One-pass sparse attention masks degraded direct-source performance and were rejected as the primary design.
-- Fixed untrained bridge states often retained decodable information without reliably controlling later answers.
-- A later source-report question showed a severe response bias and is not currently used as evidence.
-- Several relational and parity tasks failed positive controls and were rejected before hypothesis interpretation.
-
-These failures are part of the benchmark development record because they prevent apparatus failures from being mistaken for scientific null results.
+These failures are not counted as scientific nulls when the apparatus failed its own controls.
 
 ## Current safe claim
 
-The current development evidence supports this statement:
+> In Qwen2.5-3B-Instruct, acquisition route left a retained bridge state after source-history neutralisation. Exchanging early bridge K/V between acquisition routes causally moved a fixed later hidden state and the complete next-token logit vector toward the donor history after the current task relation was supplied again. The effect replicated in Mistral-7B-Instruct-v0.3 and in a separate DAX/WUG mapping task. Removing later-event access to the bridge eliminated the measured route difference.
 
-> In the tested decoder-only language models, acquisition route can leave a retained state that survives removal of the original source state and causally changes the internal processing of a later event, even when the current task information is supplied again.
-
-This statement remains development-level until the confirmatory protocol is frozen and rerun.
+The result does not establish consciousness.
