@@ -1,0 +1,7 @@
+arm,model,task,episodes,outcome,mean_net_movement,ci_low_95,ci_high_95,positive_fraction,sign_flip_p,path_removal_ratio
+qwen_primary,Qwen2.5-3B-Instruct,SAME_DIFFERENT,512,later_hidden_state,0.68747,0.68661,0.68832,1.00000,0.0000099999,0.00000
+qwen_primary,Qwen2.5-3B-Instruct,SAME_DIFFERENT,512,complete_logit_vector,0.25833,0.25555,0.26109,1.00000,0.0000099999,0.00000
+mistral_replication,Mistral-7B-Instruct-v0.3,SAME_DIFFERENT,256,later_hidden_state,0.80099,0.79955,0.80245,1.00000,0.0000099999,0.00000
+mistral_replication,Mistral-7B-Instruct-v0.3,SAME_DIFFERENT,256,complete_logit_vector,0.05865,0.05681,0.06056,1.00000,0.0000099999,0.00000
+qwen_secondary,Qwen2.5-3B-Instruct,DAX_WUG,256,later_hidden_state,0.60515,0.60352,0.60679,1.00000,0.0000099999,0.00000
+qwen_secondary,Qwen2.5-3B-Instruct,DAX_WUG,256,complete_logit_vector,0.04717,0.04335,0.05106,0.8945,0.0000099999,0.00000
