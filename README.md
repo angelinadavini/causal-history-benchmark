@@ -1,134 +1,129 @@
 # Causal History Benchmark
 
-**Does the way a model learned the same information leave a causal trace that changes what the model does later?**
+**Does learning the same information in a different way leave a state that changes what a model does later?**
 
-The Causal History Benchmark is a mechanistic benchmark for testing acquisition history in language models.
+The Causal History Benchmark (CHB) tests that question directly.
 
-Two runs end with the same usable task relation. One model history learned that relation from examples. The other received it directly. The original source-history state is then replaced with neutral state. The current relation is supplied again during a later event. A short fixed bridge is the only route-dependent state left from the earlier event.
+A model gets the same rule in two ways: from examples or from a direct instruction. The original examples or instruction are removed from the stored source state. The rule is supplied again during a later event, so the model has the same current task information in both conditions. A short fixed bridge is the only state left that depends on how the rule was learned earlier.
 
-The benchmark asks whether changing that retained bridge state changes the later computation.
+CHB moves that bridge state between the two learning conditions and measures what changes later. It also blocks later access to the bridge. A valid result therefore has to show more than a readable history signature: changing the retained state must change later processing, and the path check must behave as predicted.
 
-## Confirmed result
+## Confirmed v11 result
 
-The frozen confirmatory study passed in three arms:
+All three frozen confirmatory arms passed.
 
-| Arm | Model | Task | Episodes | Later hidden-state movement | Complete-logit movement |
+| Arm | Model | Task | Episodes | Hidden-state movement | Full-logit movement |
 | --- | --- | --- | ---: | ---: | ---: |
 | Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | **0.68747** [0.68661, 0.68832] | **0.25833** [0.25555, 0.26109] |
 | Cross-model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | **0.80099** [0.79955, 0.80245] | **0.05865** [0.05681, 0.06056] |
 | Second task | Qwen2.5-3B-Instruct | DAX/WUG | 256 | **0.60515** [0.60352, 0.60679] | **0.04717** [0.04335, 0.05106] |
 
-Values are net recipient-to-donor route-axis movement after subtracting the matched same-route donor control. Every hidden-state endpoint was positive in every episode. The full-logit endpoint was positive in every Qwen primary and Mistral episode and in 89.45% of DAX/WUG episodes.
+The reported value is movement toward the opposite learning history after subtracting the matched same-history control. Removing later access to the bridge reduced the measured route distance to **zero in hidden-state and full-logit space in all three arms**.
 
-Removing later-event attention to the bridge reduced the measured route distance to **zero in every confirmatory arm**.
+The machine result is:
 
-The confirmed machine claim is simple:
+> How the same information was learned earlier remained in a retained bridge state after the original source state was neutralised. Moving that state changed a later hidden state and the complete next-token output distribution after the current rule was supplied again. The result replicated in another model family and another task. Blocking later access to the bridge removed the measured history difference.
 
-> Acquisition route can remain as a causal machine state after the original source state is neutralised and the current relation is supplied again. Interchanging that retained state changes a later hidden representation and the complete next-token output distribution.
+CHB measures this causal-history effect. It is not a consciousness score.
 
-The result does not establish consciousness.
+## Install
 
-## Run the benchmark
-
-Clone the repository and install the pinned dependencies:
+For the benchmark utilities and tests:
 
 ```bash
 git clone https://github.com/angelinadavini/causal-history-benchmark.git
 cd causal-history-benchmark
-pip install -r requirements.txt
+pip install -e ".[test]"
+pytest -q
 ```
 
-Run the compact reference experiment on Qwen:
+For model runs:
 
 ```bash
-python scripts/reference_interchange.py --model Qwen/Qwen2.5-3B-Instruct --reps 16
+pip install -e ".[benchmark,test]"
+chb-validate
 ```
 
-The reference script tests the core intervention with source-prefix neutralisation, bridge K/V interchange, a later event with current task information supplied again, and a same-route donor control.
+The general benchmark package keeps the public API separate from the exact frozen confirmatory environment. The pinned v11 software record is preserved under `confirmatory/`.
 
-See [QUICKSTART.md](QUICKSTART.md) for the result fields and how to test another compatible decoder model.
+## Run a small reference test
 
-## Add your model
+The compact public runner implements source neutralisation, bridge K/V interchange, current-rule resupply, and the matched same-history control.
 
-The benchmark is meant to be run on other models and architectures. If you test a model, open a pull request with:
+```bash
+python scripts/run_benchmark.py \
+  --model Qwen/Qwen2.5-3B-Instruct \
+  --reps 16
+```
 
-- model name and exact revision;
-- tokenizer revision;
+This is the small reusable reference test. The frozen v11 result used prespecified model revisions, seeds, episode counts, task wording, intervention layers, analysis rules, and tokenizer checks recorded in the confirmatory archive.
+
+## What a benchmark-valid result needs
+
+A submitted result should report all of these:
+
+1. **Same information, different learning route.** The target relation must be matched across the two acquisition conditions.
+2. **Original source neutralised.** The later effect cannot depend on directly rereading the original examples or instruction.
+3. **Current information supplied again.** Both conditions receive the same usable task information during the later event.
+4. **Matched same-route control.** Cross-route movement is compared with a donor from the same route.
+5. **Causal state intervention.** Decoding route information is not enough. The retained state must be changed directly.
+6. **Later hidden-state and output measurement.** CHB reports movement in a fixed later hidden state and the complete next-token logit vector.
+7. **Path check.** Later access to the proposed carrier is removed to test whether the measured history difference depends on that path.
+
+The machine-readable result contract is in [`results/result_schema.json`](results/result_schema.json).
+
+## Frozen v11 values from Python
+
+```bash
+chb-v11
+```
+
+The package exposes the exact v11 endpoint values, job IDs, and path-check values used in the public result record.
+
+## Add another model
+
+CHB is intended to grow beyond Qwen and Mistral. A new model result should include:
+
+- exact model and revision;
+- tokenizer and software versions;
 - task and acquisition routes;
-- bridge definition;
-- intervention layers and outcome layer;
-- cross-route and same-route movement;
-- source-neutralisation check;
-- hardware and software versions.
+- source-neutralisation method;
+- bridge or other retained carrier definition;
+- intervention layers or state location;
+- outcome location;
+- cross-route movement;
+- same-route control movement;
+- path-check result;
+- hardware;
+- complete machine-readable result file.
 
-Results that satisfy the benchmark controls can be added to [LEADERBOARD.md](LEADERBOARD.md).
-
-## What is being measured
-
-The benchmark keeps several questions separate:
-
-- Does earlier information remain in state?
-- Is that state used by later computation?
-- Does acquisition route remain after current task content is supplied again?
-- Does changing the route-specific state change a later event?
-- Does the effect disappear when the later event loses access to the retained carrier?
-- Does the result replicate across tasks, models, wording, delays, and architectures?
-
-A probe that decodes route information is not enough. The central benchmark result requires a causal intervention.
-
-## Benchmark structure
-
-```text
-same relation
-    |
-    +-- learned from examples
-    |
-    +-- supplied directly
-            |
-            v
-fixed bridge state
-            |
-source-history prefix replaced by neutral K/V
-            |
-            v
-current relation supplied again in a later event
-            |
-            v
-measure later hidden state + complete logits
-            |
-            v
-interchange retained bridge state across routes
-            |
-            v
-does the later computation move toward donor history?
-```
+The current result schema is architecture-aware without treating transformer K/V as the only possible carrier. A recurrent model, state-space model, or another architecture can use a different state intervention if it answers the same causal question and reports the required controls.
 
 ## Repository map
 
-- [BENCHMARK.md](BENCHMARK.md) — benchmark contract and required controls
-- [RESULTS.md](RESULTS.md) — frozen confirmatory results and preserved failures
-- [QUICKSTART.md](QUICKSTART.md) — run the reference implementation
-- [LEADERBOARD.md](LEADERBOARD.md) — community replication table
-- [CONTRIBUTING.md](CONTRIBUTING.md) — how to submit a model result
-- [CLAIM_LIMITS.md](CLAIM_LIMITS.md) — exact supported and unsupported claims
-- [scripts/reference_interchange.py](scripts/reference_interchange.py) — compact runnable experiment
-- [results/confirmatory_summary.csv](results/confirmatory_summary.csv) — machine-readable v11 endpoint summary
+- [`BENCHMARK.md`](BENCHMARK.md) — benchmark contract and required controls
+- [`RESULTS.md`](RESULTS.md) — frozen v11 results and preserved failures
+- [`QUICKSTART.md`](QUICKSTART.md) — compact runner instructions
+- [`LEADERBOARD.md`](LEADERBOARD.md) — confirmed and community model results
+- [`MODEL_SUPPORT.md`](MODEL_SUPPORT.md) — current model support
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to submit a replication
+- [`confirmatory/`](confirmatory/) — frozen protocol provenance
+- [`configs/`](configs/) — machine-readable confirmatory arm definitions
+- [`src/causal_history/`](src/causal_history/) — reusable metric, task, schema, and v11 utilities
+- [`scripts/reference_interchange.py`](scripts/reference_interchange.py) — compact model experiment
+- [`tests/`](tests/) — benchmark utility tests
+- [`results/confirmatory_summary.csv`](results/confirmatory_summary.csv) — frozen endpoint table
+- [`results/result_schema.json`](results/result_schema.json) — result submission schema
 
 ## Why this exists independently of a paper
 
-A paper is one report of the benchmark. The benchmark itself is meant to be reused.
+A paper reports one use of the method. The benchmark is meant to be run again.
 
-A model developer can run it on a new model. A mechanistic-interpretability researcher can replace the K/V intervention with another causal method. A memory-system researcher can test longer delays. A state-space or recurrent-model researcher can ask whether the same history effect appears outside transformer K/V state.
-
-That makes the useful object the test and its controls, not a single publication.
-
-## Claim boundary
-
-The current confirmatory evidence covers two decoder-only transformer families and two synthetic relation tasks. It does not establish phenomenal consciousness, sentience, subjective continuity, a unique consciousness criterion, valid verbal source attribution, a robust overt-choice effect, or generality across architectures.
+Researchers can test another model, replace K/V interchange with another causal intervention, add longer delays, use different acquisition histories, or ask whether the same effect appears outside decoder-only transformers. Future results can be compared against the same experimental question and control structure.
 
 ## Citation
 
-GitHub exposes the repository citation through [CITATION.cff](CITATION.cff). Please cite the benchmark if you use its task, intervention, controls, or results.
+GitHub exposes the repository citation through [`CITATION.cff`](CITATION.cff).
 
 ## Author
 
@@ -136,4 +131,4 @@ Angelina Davini Hintsanen
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+MIT License. See [`LICENSE`](LICENSE).
