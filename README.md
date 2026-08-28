@@ -30,6 +30,16 @@ The result is simple:
 
 CHB measures that effect. It does not assign a consciousness score.
 
+## A separate third-family extension
+
+An OLMo-2 run used a new frozen protocol after the three v11 tests. Its hidden
+state moved **0.58722** toward the donor history (95% CI [0.58430, 0.59009])
+after the same-history control, with zero movement when the bridge path was
+cut. The full next-token logit movement was **0.03286** (95% CI [-0.03762,
+0.10720]), so that endpoint is recorded as inconclusive. This extension does
+not change the frozen v11 results. Its protocol, raw log, and result file are
+in [`replications/olmo2/`](replications/olmo2/).
+
 ## Run it
 
 Clone the repo:

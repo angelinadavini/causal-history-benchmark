@@ -22,6 +22,7 @@ It shows:
 
 - the question CHB asks;
 - the three frozen v11 results;
+- the separate OLMo-2 extension result and its uncertainty;
 - the bridge-cut result;
 - the command to run the public reference test;
 - the GitHub link;

@@ -6,6 +6,10 @@ RESULTS = [
     ["Qwen2.5-3B-Instruct", "DAX/WUG", 256, "0.60515 [0.60352, 0.60679]", "0.04717 [0.04335, 0.05106]", "0"],
 ]
 
+EXTENSION_RESULTS = [
+    ["OLMo-2-1124-7B-Instruct", "SAME/DIFFERENT", 256, "0.58722 [0.58430, 0.59009]", "0.03286 [-0.03762, 0.10720]", "0"],
+]
+
 with gr.Blocks(title="Causal History Benchmark") as demo:
     gr.Markdown(
         """
@@ -33,6 +37,21 @@ The confirmed result is simple: **how the rule was learned earlier still changed
         value=RESULTS,
         interactive=False,
         label="Frozen v11 results",
+    )
+
+    gr.Markdown("## Separate OLMo-2 extension\n\nThe hidden-state endpoint was positive. The full-logit interval includes zero, so it is recorded as inconclusive. This extension does not change the frozen v11 results.")
+    gr.Dataframe(
+        headers=[
+            "Model",
+            "Task",
+            "Episodes",
+            "Hidden-state movement",
+            "Full-logit movement",
+            "Distance after bridge cut",
+        ],
+        value=EXTENSION_RESULTS,
+        interactive=False,
+        label="Separate extension result",
     )
 
     gr.Markdown(

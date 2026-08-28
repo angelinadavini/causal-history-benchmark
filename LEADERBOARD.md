@@ -25,6 +25,16 @@ No outside replication has been accepted yet.
 | --- | --- | --- | ---: | ---: | ---: | --- | --- |
 | — | — | — | — | — | — | — | open |
 
+## New model-family extensions
+
+These rows are kept separate from the frozen v11 reference results. They use
+the same causal-history question with a newly frozen model-specific run.
+
+| Model | Task | Pairs | State moved | Later measure | Net movement | 95% CI | After bridge cut | Status |
+| --- | --- | ---: | --- | --- | ---: | --- | ---: | --- |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT | 256 | bridge K/V, layers 0--5 | hidden layer 8 | **0.58722** | [0.58430, 0.59009] | distance -> 0 | extension: positive hidden endpoint |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT | 256 | bridge K/V, layers 0--5 | full next-token logits | **0.03286** | [-0.03762, 0.10720] | distance -> 0 | extension: interval includes zero |
+
 ## Add your model
 
 Open a pull request with:

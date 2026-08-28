@@ -15,6 +15,11 @@
     "replications/olmo2/OLMO2_EXTENSION_PROTOCOL.md": "83e797f5161313f1d6e58d0b89b84c39e0b80aafa5a0bbd9e320121eab45fa23",
     "configs/olmo2_extension.json": "a2a4f5f59a1646f4d3e526ae650ace4aeb0297e909804a205212bba23f5d1cec"
   },
-  "status": "frozen_before_run",
+  "status": "completed",
+  "job_id": "6a916eeb45686a1580c115a9",
+  "raw_log": "replications/olmo2/OLMO2_EXTENSION_JOB_6a916eeb45686a1580c115a9_RAW_FINAL.log",
+  "result_file": "replications/olmo2/OLMO2_RESULT.json",
+  "raw_log_sha256": "a73bc494439c4d57dec17f492828c0879693ad1f36b6d73a3572094af40d236b",
+  "result_sha256": "887d1388573bf8f4f61756c8a113960b12e62f52c418a1f62a933fa2165ad63a",
   "scientific_boundary": "This is a third-family extension, separate from frozen v11; it does not establish phenomenal consciousness."
 }
