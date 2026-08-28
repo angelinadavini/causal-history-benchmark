@@ -1,37 +1,38 @@
-# Model support
+# Models tested so far
 
-| Model | Status | Confirmed task(s) | Confirmed result |
-| --- | --- | --- | --- |
-| Qwen2.5-3B-Instruct | frozen primary + second-task replication | SAME/DIFFERENT; DAX/WUG | positive hidden-state and complete-logit route movement; bridge-path removal reduced route distance to zero |
-| Mistral-7B-Instruct-v0.3 | frozen cross-model replication | SAME/DIFFERENT | positive hidden-state and complete-logit route movement; bridge-path removal reduced route distance to zero |
-| Qwen2.5-0.5B-Instruct | development only | early task versions | below task-capacity gate; no scientific history inference |
-| Phi-3.5-mini-instruct | engineering blocked in exploratory code | — | cache API incompatibility; no scientific result |
+| Model | What happened | Task(s) |
+| --- | --- | --- |
+| Qwen2.5-3B-Instruct | Confirmed. Moving the bridge state moved both a later hidden state and the full next-token output. Cutting bridge access removed the measured history difference. | SAME/DIFFERENT; DAX/WUG |
+| Mistral-7B-Instruct-v0.3 | Confirmed. The same pattern appeared in a second model family. Cutting bridge access removed the measured history difference. | SAME/DIFFERENT |
+| Qwen2.5-0.5B-Instruct | The model did not pass the task-performance check used during development, so no history conclusion was drawn from it. | early task versions |
+| Phi-3.5-mini-instruct | The exploratory code hit a cache API incompatibility before the scientific test ran. | — |
 
-See [RESULTS.md](RESULTS.md) for exact confirmatory numbers.
+Exact confirmed numbers are in [`RESULTS.md`](RESULTS.md).
 
-## Models wanted
+## Models I want to see tested next
 
-External replications are especially useful for:
+The most useful next tests are models that tell us whether the result travels beyond the systems already used:
 
-- Gemma-family models;
+- Gemma models;
 - Llama-family models;
+- other Qwen and Mistral sizes;
 - state-space language models;
 - recurrent language models;
-- explicit-memory models;
-- models with learned context compression;
-- multimodal agents with persistent internal state.
+- models with explicit memory;
+- models that learn to compress earlier context;
+- multimodal agents that keep internal state across events.
 
-## Adding a model
+## What a new model has to show
 
-A model should enter the replication leaderboard only after:
+Before a result goes on the leaderboard, the run should show that:
 
-1. the model passes task and tokenizer positive controls;
-2. the original source is removed or neutralised;
-3. current task content is supplied equally across histories;
-4. the retained state is identified;
-5. cross-route state intervention is run;
-6. a matched same-route intervention is run;
-7. a path-removal or architecture-appropriate carrier check is run;
-8. seeds, revisions, code, and software versions are preserved.
+1. the model can do the task;
+2. the tokenizer behaves as expected;
+3. the original teaching state was removed or neutralised;
+4. the same current rule was supplied in both learning conditions;
+5. the retained history state was changed directly;
+6. the cross-history change was compared with a same-history control;
+7. the path carrying the effect was cut or tested in the closest equivalent way for that model;
+8. seeds, model versions, software, and code were saved.
 
-A null result is useful when the apparatus passes its controls.
+A clean negative result is useful. A broken setup is a setup problem, not evidence that the effect is absent.
