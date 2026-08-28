@@ -1,54 +1,67 @@
 # Claim limits
 
-The benchmark is designed to measure causal effects of acquisition history inside AI systems.
+## Supported by the frozen v11 confirmatory study
 
-## Supported by current development evidence
+The evidence supports this claim:
 
-Current experiments support further testing of these claims:
+> In Qwen2.5-3B-Instruct, acquisition route left a retained bridge state after source-history neutralisation. Exchanging early bridge K/V between acquisition routes causally moved both a fixed later hidden state and the complete next-token logit vector toward the donor history after the current task relation was supplied again. The effect replicated in Mistral-7B-Instruct-v0.3 and in a separate DAX/WUG mapping task.
 
-- different acquisition routes can leave distinguishable retained states;
-- route information can survive after the original source-prefix state is neutralized;
-- changing retained bridge K/V state can causally change the internal state produced by a later event;
-- the effect can generalize across wording templates;
-- the effect can generalize across at least two task forms inside Qwen2.5-3B-Instruct;
-- a first Mistral-7B replication shows a similar interchange effect.
+The bridge-path intervention supports a carrier claim inside this implementation: the measured route difference disappeared when later tokens could not attend to the bridge.
 
-## Not established
+The SAME/DIFFERENT results also support transfer across task-content mode and evaluation wording at the fixed hidden layer. The evaluation wording was held out from confirmatory centroid estimation and had been inspected during development.
 
-The current experiments do not establish:
+## Unsupported
 
-- phenomenal consciousness;
-- subjective experience;
-- a validated consciousness marker;
-- a unique feature of conscious processing;
-- a general law applying to all language models;
-- a robust effect on final overt answers under every task;
-- reliable verbal source attribution;
-- equivalence between Transformer K/V state and biological memory;
-- equivalence between model layers and human conscious-processing stages.
+Do not use this benchmark result to claim:
 
-## Prior claims this project does not take as novel
+- consciousness;
+- sentience;
+- phenomenal experience;
+- subjective continuity;
+- a unique criterion for consciousness;
+- a general result for every language model or artificial system;
+- a robust overt-choice effect;
+- valid verbal source attribution;
+- equivalence between transformer bridge K/V and human experience;
+- independence from transformer K/V architecture;
+- persistence across unrestricted delays or intervening events;
+- investigator-unseen wording.
 
-The project does not claim novelty for the following facts:
+## Answer endpoint
 
-- prior context can change later model behavior;
-- source/context differences can be decoded from internal representations;
-- erased text can leave information in downstream K/V state;
-- internal information can be decodable without being causally used;
-- task or concept representations can be manipulated causally;
-- machine introspection can succeed in limited settings;
-- temporal continuity has been proposed as relevant to AI consciousness.
+The Qwen primary correct-answer margin moved 0.45166 logits toward the donor, with a 90% CI of [0.43629, 0.46694]. That interval lies outside the frozen ±0.20-logit equivalence bound.
 
-## Current novelty target
+The two-token probability movement was 0.00562 [0.00467, 0.00658], inside its ±0.05 bound.
 
-The active target is narrower:
+No choice-flip rule was frozen. State only that the complete output distribution moved and that the Qwen secondary margin endpoint was not negligible under the frozen rule.
 
-> Test whether the route by which the same usable information entered a model leaves a retained causal state that changes processing of a later event after the original source is unavailable and current task content is controlled.
+Mistral and DAX/WUG met both answer-endpoint equivalence rules.
 
-A strong benchmark result requires matched content, source removal or neutralization, a genuinely later event, causal intervention, matched controls, held-out wording, task replication, and cross-model replication.
+## Prior-work boundary
 
-## Consciousness interpretation
+The benchmark does not claim discovery of:
 
-The benchmark can be compared with consciousness theories and human experiments because many consciousness theories make claims about temporal order, recurrence, access, report, memory, integration, and system history.
+- K/V leakage after text removal;
+- generic prompt-history effects;
+- decodability of retained state;
+- task or function vectors;
+- machine introspection;
+- source-provenance signatures;
+- temporal continuity as a proposed AI-consciousness requirement;
+- consciousness-theory indicators for AI.
 
-The machine result remains a machine result. Any consciousness conclusion requires an additional bridge from measured computational properties to a theory of consciousness. That bridge is currently disputed across the scientific literature.
+The contribution is the controlled causal sequence:
+
+```text
+same usable relation
+-> different acquisition route
+-> source prefix neutralised
+-> current relation supplied again
+-> retained bridge state interchanged
+-> later hidden state and full logit distribution move toward donor history
+-> bridge access removed and route difference disappears
+```
+
+## Community extensions
+
+A result from another model or architecture inherits only the claim supported by its own controls. A replication should not be described as a consciousness result unless an independent validated consciousness criterion exists. This repository currently contains no such criterion.
