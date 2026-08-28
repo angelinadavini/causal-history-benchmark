@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: Causal History Benchmark
+message: "If you use this benchmark, please cite the repository and the later archival release when available."
+type: software
+authors:
+  - family-names: Hintsanen
+    given-names: Angelina Davini
+repository-code: "https://github.com/angelinadavini/causal-history-benchmark"
+license: MIT
+version: 0.1.0-dev
+date-released: 2026-08-28
+abstract: "A mechanistic benchmark for testing whether the route by which information entered an AI model leaves a retained causal trace that changes later processing after the original source is unavailable and current task content is controlled."
+keywords:
+  - mechanistic interpretability
+  - causal intervention
+  - language models
+  - in-context learning
+  - memory
+  - causal history
