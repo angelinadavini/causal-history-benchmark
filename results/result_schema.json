@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Causal History Benchmark result",
+  "type": "object",
+  "required": [
+    "benchmark_version",
+    "model",
+    "model_revision",
+    "task",
+    "episodes",
+    "hidden_net_movement",
+    "logit_net_movement",
+    "hidden_cut_ratio",
+    "logit_cut_ratio",
+    "source_neutralised",
+    "same_route_control"
+  ],
+  "properties": {
+    "benchmark_version": {"type": "string"},
+    "model": {"type": "string"},
+    "model_revision": {"type": "string"},
+    "task": {"type": "string"},
+    "episodes": {"type": "integer", "minimum": 1},
+    "hidden_net_movement": {"type": "number"},
+    "logit_net_movement": {"type": "number"},
+    "hidden_cut_ratio": {"type": "number"},
+    "logit_cut_ratio": {"type": "number"},
+    "source_neutralised": {"const": true},
+    "same_route_control": {"const": true},
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": true
+}
