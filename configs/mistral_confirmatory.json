@@ -1,0 +1,9 @@
+{
+  "arm": "mistral_replication",
+  "model": "mistralai/Mistral-7B-Instruct-v0.3",
+  "revision": "c170c708c41dac9275d15a8fff4eca08d52bab71",
+  "task": "same_different",
+  "episodes": 256,
+  "patched_layers": [0, 1, 2, 3, 4],
+  "outcome_layer": 7
+}

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "causal-history-benchmark"
+version = "0.1.0"
+description = "A reusable benchmark for testing whether acquisition history causally changes later language-model processing."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Angelina Davini Hintsanen"}]
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+benchmark = [
+  "torch>=2.6",
+  "transformers>=5.13.0",
+  "sentencepiece>=0.2.1",
+  "accelerate>=1.10.1",
+]
+test = ["pytest>=8"]
+
+[project.scripts]
+chb-validate = "causal_history.cli:validate_install"
+chb-v11 = "causal_history.cli:show_v11"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

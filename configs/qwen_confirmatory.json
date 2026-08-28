@@ -1,0 +1,9 @@
+{
+  "arm": "qwen_primary",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "task": "same_different",
+  "episodes": 512,
+  "patched_layers": [0, 1, 2, 3, 4, 5],
+  "outcome_layer": 8
+}
