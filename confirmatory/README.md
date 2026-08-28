@@ -1,8 +1,8 @@
-# Frozen confirmatory benchmark v2.1
+# The frozen v11 experiment
 
-This directory records the frozen confirmatory provenance used by the v11 result.
+This folder records exactly which confirmatory runs count as the v11 result and why.
 
-## Valid scientific jobs
+## The three valid jobs
 
 - Qwen primary: `6a90939f45686a1580c0f60e`
 - Mistral replication: `6a9093b3984507d9db4e8d7d`
@@ -16,19 +16,15 @@ Base v2 manifest:
 fb42c0f7e984c8e775b55960eb5c7f9be02d6eff8944bcdb198223435764a7d2
 ```
 
-Secondary v2.1 manifest:
+DAX/WUG v2.1 manifest:
 
 ```text
 570f3119f16b32942c0bae5fdbdeb8396311a76c3bb8fed1b6eea577fc69cb54
 ```
 
-The base v2 manifest records frozen episode, reference, bootstrap, and randomisation seeds for the primary Qwen, Mistral replication, and original secondary arms.
+These hashes identify the seeds and frozen protocol used for the confirmed study.
 
-The secondary v2.1 manifest records fresh secondary seeds after the tokenizer-only amendment.
-
-## Package versions
-
-The frozen confirmatory requirements were:
+## Software used for the frozen runs
 
 ```text
 transformers==5.13.0
@@ -36,23 +32,27 @@ sentencepiece==0.2.1
 accelerate==1.10.1
 ```
 
-## Why v2.1 exists
+## Why there is a v2.1
 
-The original confirmatory launch was invalidated before scientific output was inspected because a bare-label tokenizer assumption failed for Mistral.
+The first confirmatory launch had a tokenizer problem. Mistral did not handle the answer labels the way the code assumed.
 
-A repaired v2 launch completed the Qwen primary and Mistral arms. The DAX/WUG arm then stopped on its first episode because adding `X` changed the query-token boundary.
+That problem was found before scientific output was inspected. The related Qwen jobs were cancelled unread.
 
-A tokenizer-only preflight checked `0`, `1`, `X`, and `Y` in every task cell for both pinned tokenizers. The DAX/WUG later query received one added newline after `Answer:`. The amendment and fresh secondary seeds were frozen before the completed Qwen and Mistral scientific outputs were opened.
+The repaired v2 launch completed the Qwen primary and Mistral runs. The DAX/WUG run then stopped on its first episode because adding `X` changed the query-token boundary.
 
-## Result summary
+A tokenizer-only check tested `0`, `1`, `X`, and `Y` across both tokenizers and every task condition. The DAX/WUG prompt was repaired with one newline after `Answer:`. New DAX/WUG seeds and the amendment were frozen before the completed Qwen and Mistral scientific outputs were opened.
+
+That repaired secondary run is v2.1.
+
+## Results
 
 See:
 
-- [../RESULTS.md](../RESULTS.md)
-- [../results/confirmatory_summary.csv](../results/confirmatory_summary.csv)
+- [`../RESULTS.md`](../RESULTS.md) for the human-readable result;
+- [`../results/confirmatory_summary.csv`](../results/confirmatory_summary.csv) for the machine-readable endpoint table.
 
-## Public reproduction
+## Quick run versus exact reproduction
 
-The compact public runner in `scripts/reference_interchange.py` implements the core causal manipulation for reuse on compatible models.
+`scripts/reference_interchange.py` is the small public test. It is useful for trying the method on a compatible model.
 
-The repository will keep the exact frozen confirmatory runners and complete raw result package as a versioned archival artifact. The manifest hashes above identify the frozen protocol state independently of later benchmark extensions.
+The exact v11 runners, analysis code, manifests, and protocol records are being kept separately in this folder so the quick test cannot be confused with the experiment that produced the frozen numbers.
