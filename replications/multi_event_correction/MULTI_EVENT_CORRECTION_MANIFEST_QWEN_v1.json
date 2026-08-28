@@ -1,0 +1,18 @@
+{
+  "manifest_version": "chb-multi-event-correction-v1",
+  "arm": "qwen_primary",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "task": "same_different",
+  "episodes": 256,
+  "seed": 20260829,
+  "patched_layers": [0, 1, 2, 3, 4, 5],
+  "outcome_layer": 8,
+  "chunk_size": 32,
+  "bridge1_text": "Initial event processed. Continue.\n",
+  "bridge2_text": "Correction processed. Ready.\n",
+  "protocol_path": "replications/multi_event_correction/MULTI_EVENT_CORRECTION_PROTOCOL_v1.md",
+  "protocol_sha256": "dd4d0e9e597bce96c3ca1674a0d71bd41234fa82fff940693c1a3d0c21939661",
+  "runner_sha256": "5c0d6e0d9b6731b81803c70ce3a7f88e0ae11339795551c409a7166e3d7118d0",
+  "scientific_status": "frozen extension; separate from v11"
+}

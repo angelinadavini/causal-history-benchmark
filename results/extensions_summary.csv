@@ -1,0 +1,4 @@
+extension,model,model_revision,task,episodes,hidden_net_mean,hidden_net_ci95,logit_net_mean,logit_net_ci95,hidden_cut_mean,logit_cut_mean,status
+olmo2_extension,allenai/OLMo-2-1124-7B-Instruct,470b1fba1ae01581f270116362ee4aa1b97f4c84,same_different,256,0.5872172999,"[0.5842970570,0.5900898718]",0.0328645592,"[-0.0376161673,0.1071952813]",0.0,0.0,positive_hidden_inconclusive_logit
+multi_event_correction_qwen,Qwen/Qwen2.5-3B-Instruct,aa8e72537993ba99e69dfaafa59ed015b17504d1,same_different_correction,256,0.0048173679,"[0.0001567868,0.0094293584]",-0.0085196076,"[-0.0112517329,-0.0058107822]",0.0,0.0,positive_hidden_negative_logit
+multi_event_correction_olmo2,allenai/OLMo-2-1124-7B-Instruct,470b1fba1ae01581f270116362ee4aa1b97f4c84,same_different_correction,256,0.0265801181,"[0.0249872609,0.0281563836]",-0.0362607827,"[-0.0448015887,-0.0276334780]",0.0,0.0,positive_hidden_negative_logit

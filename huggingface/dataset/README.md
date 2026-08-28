@@ -32,6 +32,23 @@ The test also cuts access to the bridge. If the later difference depends on that
 
 The full confidence intervals and frozen job record are in the public GitHub repository.
 
+## Separate OLMo-2 extension
+
+The later OLMo-2 extension is recorded separately from the frozen v11 table.
+Its hidden-state movement was 0.58722 (95% CI [0.58430, 0.59009]) after the
+same-history control. Its full-logit movement was 0.03286 (95% CI [-0.03762,
+0.10720]), so that endpoint is inconclusive. Both bridge-cut distances were
+zero. The raw log and all 256 records are linked from the GitHub repository.
+
+## Multi-event correction extension
+
+An extra run inserted an explicit correction event before the final test. The
+final hidden-state net movement was 0.00482 (95% CI [0.00016, 0.00943]) for
+Qwen and 0.02658 (95% CI [0.02499, 0.02816]) for OLMo. The final full-logit net
+was -0.00852 (95% CI [-0.01125, -0.00581]) for Qwen and -0.03626 (95% CI
+[-0.04480, -0.02763]) for OLMo. The full retained-state cut was zero in both
+runs. These extension results are kept separate from the frozen v11 table.
+
 ## The result
 
 > The way the model learned the same information earlier changed what happened later. The original teaching state was gone. The same current rule was supplied again. Moving the state left by the earlier learning moved the later computation. Blocking access to that state removed the difference.

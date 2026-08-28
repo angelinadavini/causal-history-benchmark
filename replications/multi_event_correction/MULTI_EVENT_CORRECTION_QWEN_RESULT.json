@@ -1,0 +1,36 @@
+{
+  "analysis_version": "chb-multi-event-correction-analysis-v1",
+  "episodes": 256,
+  "full_cut_hidden_zero": true,
+  "full_cut_logit_zero": true,
+  "hidden_full_cut_distance_mean": 0.0,
+  "hidden_net": {
+    "ci95": [
+      0.00015678682388653442,
+      0.00942935839255199
+    ],
+    "mean": 0.004817367861996047
+  },
+  "hidden_positive_fraction": 0.50390625,
+  "hidden_route_distance_after_correction_mean": 1.205992968287319,
+  "hidden_second_bridge_cut_distance_mean": 1.4190695360302925,
+  "logit_full_cut_distance_mean": 0.0,
+  "logit_net": {
+    "ci95": [
+      -0.011251732925817493,
+      -0.0058107822488899785
+    ],
+    "mean": -0.008519607581398247
+  },
+  "logit_positive_fraction": 0.296875,
+  "logit_route_distance_after_correction_mean": 296.4083158969879,
+  "logit_second_bridge_cut_distance_mean": 309.1525096297264,
+  "manifest_sha256": "2387430cad4e991d486051a4341315f04b5bbabf259ff945660599f28d10b2da",
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "protocol_sha256": "dd4d0e9e597bce96c3ca1674a0d71bd41234fa82fff940693c1a3d0c21939661",
+  "reported_result_matches": true,
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "runner_sha256": "5c0d6e0d9b6731b81803c70ce3a7f88e0ae11339795551c409a7166e3d7118d0",
+  "status": "analysed",
+  "task": "same_different"
+}

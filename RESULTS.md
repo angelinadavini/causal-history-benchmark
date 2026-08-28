@@ -99,6 +99,51 @@ These are kept because they changed how the final experiment was built:
 
 An apparatus failure is not counted as evidence for or against the scientific claim.
 
+## Third-family extension: OLMo-2
+
+This is a new extension result. It does not change the frozen v11 values
+above.
+
+The run used `allenai/OLMo-2-1124-7B-Instruct` at revision
+`470b1fba1ae01581f270116362ee4aa1b97f4c84`, with 256 episodes of the
+SAME/DIFFERENT task. The source state was neutralised, the same current rule
+was supplied again, and bridge K/V from the other learning history was moved
+at layers 0--5. A same-history swap was the control. The later hidden state was
+measured at layer 8, along with the complete next-token logit vector.
+
+| Measure | Cross-history movement | Same-history control | Net movement | 95% CI for net | Bridge cut |
+| --- | ---: | ---: | ---: | --- | ---: |
+| Later hidden state | 0.58816 | 0.00095 | **0.58722** | [0.58430, 0.59009] | 0.00000 |
+| Complete next-token logits | 0.03700 | 0.00414 | **0.03286** | [-0.03762, 0.10720] | 0.00000 |
+
+All 256 hidden-state net values were positive. The logit net was positive in
+119 of 256 episodes (46.48%). The hidden-state result is positive under the
+frozen extension analysis. The full-logit endpoint is inconclusive because
+its interval includes zero. The complete raw log and every episode record are
+in [`replications/olmo2/`](replications/olmo2/).
+
 ## The result in plain English
 
 > The way the model learned the same information earlier changed what happened later. The original source state had been removed and the same current rule had been supplied again. Moving the bridge state left by one learning history into the other condition moved both a later hidden state and the complete next-token output toward the history that supplied the bridge. The result replicated in another model family and another task. When the bridge could no longer be used, the measured history difference disappeared.
+
+## Multi-event correction extension
+
+This separate extension asks what remains after a later event explicitly
+reverses the first rule. The model learns SAME or DIFFERENT from examples or a
+direct instruction, the original source state is neutralised, and a correction
+event reverses the rule. The corrected rule is supplied again in the final
+event. The second bridge state is exchanged across histories, with a
+same-history exchange as the control.
+
+| Model | Episodes | Final hidden-state net | 95% CI | Final full-logit net | 95% CI | Full retained-state cut |
+| --- | ---: | ---: | --- | ---: | --- | ---: |
+| Qwen2.5-3B-Instruct | 256 | 0.00482 | [0.00016, 0.00943] | -0.00852 | [-0.01125, -0.00581] | 0.00000 |
+| OLMo-2-1124-7B-Instruct | 256 | 0.02658 | [0.02499, 0.02816] | -0.03626 | [-0.04480, -0.02763] | 0.00000 |
+
+The final hidden-state endpoint stayed above zero in both runs. The complete
+next-token logit endpoint moved below zero in both runs. The correction test
+therefore gives a small retained hidden-state effect under this protocol and
+does not give a positive full-logit result. It is an extension and does not
+change the frozen v11 values. Full records, raw logs, manifests, and the
+analysis files are in
+[`replications/multi_event_correction/`](replications/multi_event_correction/).

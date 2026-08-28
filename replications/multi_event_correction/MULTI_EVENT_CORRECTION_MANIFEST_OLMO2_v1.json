@@ -1,0 +1,18 @@
+{
+  "manifest_version": "chb-multi-event-correction-v1",
+  "arm": "olmo2_extension",
+  "model": "allenai/OLMo-2-1124-7B-Instruct",
+  "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+  "task": "same_different",
+  "episodes": 256,
+  "seed": 20260830,
+  "patched_layers": [0, 1, 2, 3, 4, 5],
+  "outcome_layer": 8,
+  "chunk_size": 32,
+  "bridge1_text": "Initial event processed. Continue.\n",
+  "bridge2_text": "Correction processed. Ready.\n",
+  "protocol_path": "replications/multi_event_correction/MULTI_EVENT_CORRECTION_PROTOCOL_v1.md",
+  "protocol_sha256": "dd4d0e9e597bce96c3ca1674a0d71bd41234fa82fff940693c1a3d0c21939661",
+  "runner_sha256": "5c0d6e0d9b6731b81803c70ce3a7f88e0ae11339795551c409a7166e3d7118d0",
+  "scientific_status": "frozen extension; separate from v11"
+}

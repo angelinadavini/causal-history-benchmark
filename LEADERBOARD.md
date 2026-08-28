@@ -25,6 +25,28 @@ No outside replication has been accepted yet.
 | --- | --- | --- | ---: | ---: | ---: | --- | --- |
 | — | — | — | — | — | — | — | open |
 
+## New model-family extensions
+
+These rows are kept separate from the frozen v11 reference results. They use
+the same causal-history question with a newly frozen model-specific run.
+
+| Model | Task | Pairs | State moved | Later measure | Net movement | 95% CI | After bridge cut | Status |
+| --- | --- | ---: | --- | --- | ---: | --- | ---: | --- |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT | 256 | bridge K/V, layers 0--5 | hidden layer 8 | **0.58722** | [0.58430, 0.59009] | distance -> 0 | extension: positive hidden endpoint |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT | 256 | bridge K/V, layers 0--5 | full next-token logits | **0.03286** | [-0.03762, 0.10720] | distance -> 0 | extension: interval includes zero |
+
+## Multi-event correction extension
+
+These runs add an explicit correction event before the final test. They are
+kept separate from the v11 reference rows and from the one-event OLMo result.
+
+| Model | Task | Episodes | State moved | Later measure | Net movement | 95% CI | Full cut | Status |
+| --- | --- | ---: | --- | --- | ---: | --- | ---: | --- |
+| Qwen2.5-3B-Instruct | SAME/DIFFERENT with correction | 256 | second bridge K/V, layers 0--5 | final hidden layer 8 | **0.00482** | [0.00016, 0.00943] | distance -> 0 | extension: positive hidden endpoint |
+| Qwen2.5-3B-Instruct | SAME/DIFFERENT with correction | 256 | second bridge K/V, layers 0--5 | final full next-token logits | **-0.00852** | [-0.01125, -0.00581] | distance -> 0 | extension: no positive logit endpoint |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT with correction | 256 | second bridge K/V, layers 0--5 | final hidden layer 8 | **0.02658** | [0.02499, 0.02816] | distance -> 0 | extension: positive hidden endpoint |
+| OLMo-2-1124-7B-Instruct | SAME/DIFFERENT with correction | 256 | second bridge K/V, layers 0--5 | final full next-token logits | **-0.03626** | [-0.04480, -0.02763] | distance -> 0 | extension: no positive logit endpoint |
+
 ## Add your model
 
 Open a pull request with:

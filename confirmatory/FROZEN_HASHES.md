@@ -14,3 +14,15 @@ These hashes come from the preserved v11 confirmatory packages.
 | Pinned requirements | `5fd7fcfeece3486c2137b6432c9d20c185cb211ec56afbe21eca9dbc5e986133` |
 
 The public reference runner is intentionally separate from the frozen confirmatory runner. A reference run may be extended to new models. A frozen reproduction must use the archived code and manifests identified here.
+
+## Multi-event correction extension
+
+These files define the separate correction runs. They do not change the v11
+study.
+
+| File | SHA-256 |
+| --- | --- |
+| Correction protocol | `dd4d0e9e597bce96c3ca1674a0d71bd41234fa82fff940693c1a3d0c21939661` |
+| Correction runner | `5c0d6e0d9b6731b81803c70ce3a7f88e0ae11339795551c409a7166e3d7118d0` |
+| Qwen correction manifest | `2387430cad4e991d486051a4341315f04b5bbabf259ff945660599f28d10b2da` |
+| OLMo correction manifest | `e455378ee4c75ef0533261ea1e3445bbb47613f02c1395bd37f9c0127d9daea4` |

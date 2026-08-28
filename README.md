@@ -30,6 +30,33 @@ The result is simple:
 
 CHB measures that effect. It does not assign a consciousness score.
 
+## A separate third-family extension
+
+An OLMo-2 run used a new frozen protocol after the three v11 tests. Its hidden
+state moved **0.58722** toward the donor history (95% CI [0.58430, 0.59009])
+after the same-history control, with zero movement when the bridge path was
+cut. The full next-token logit movement was **0.03286** (95% CI [-0.03762,
+0.10720]), so that endpoint is recorded as inconclusive. This extension does
+not change the frozen v11 results. Its protocol, raw log, and result file are
+in [`replications/olmo2/`](replications/olmo2/).
+
+## A multi-event correction extension
+
+We also ran a separate test with an explicit correction event between the
+first learning event and the final test. In 256 episodes each, Qwen and OLMo
+kept a small positive hidden-state history effect after the correction:
+
+| Model | Final hidden-state net | 95% CI | Final full-logit net | 95% CI |
+| --- | ---: | --- | ---: | --- |
+| Qwen2.5-3B-Instruct | **0.00482** | [0.00016, 0.00943] | -0.00852 | [-0.01125, -0.00581] |
+| OLMo-2-1124-7B-Instruct | **0.02658** | [0.02499, 0.02816] | -0.03626 | [-0.04480, -0.02763] |
+
+The full retained-state cut was zero in both runs. The hidden-state endpoint
+stayed above zero; the complete next-token logit endpoint did not. These are
+extension results and do not change the frozen v11 study. The raw logs,
+manifests, and analysis files are in
+[`replications/multi_event_correction/`](replications/multi_event_correction/).
+
 ## Run it
 
 Clone the repo:
@@ -117,10 +144,13 @@ The exact frozen runners, analysis, protocols, seed manifests, and final logs ar
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to add a model result
 - [`confirmatory/`](confirmatory/) — frozen v11 protocol records and hashes
 - [`configs/`](configs/) — machine-readable definitions of the three confirmed arms
+- [`replications/`](replications/) — separate OLMo and multi-event correction runs
 - [`src/causal_history/`](src/causal_history/) — reusable Python code
 - [`tests/`](tests/) — package tests
 - [`results/confirmatory_summary.csv`](results/confirmatory_summary.csv) — frozen result table
+- [`results/extensions_summary.csv`](results/extensions_summary.csv) — separate model-extension results
 - [`results/result_schema.json`](results/result_schema.json) — format for new results
+- [`OUTSIDE_REPRODUCTION.md`](OUTSIDE_REPRODUCTION.md) — exact files and request for an independent run
 
 ## Why I made it public
 

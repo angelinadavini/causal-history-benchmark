@@ -6,6 +6,15 @@ RESULTS = [
     ["Qwen2.5-3B-Instruct", "DAX/WUG", 256, "0.60515 [0.60352, 0.60679]", "0.04717 [0.04335, 0.05106]", "0"],
 ]
 
+EXTENSION_RESULTS = [
+    ["OLMo-2-1124-7B-Instruct", "SAME/DIFFERENT", 256, "0.58722 [0.58430, 0.59009]", "0.03286 [-0.03762, 0.10720]", "0"],
+]
+
+CORRECTION_RESULTS = [
+    ["Qwen2.5-3B-Instruct", "SAME/DIFFERENT with correction", 256, "0.00482 [0.00016, 0.00943]", "-0.00852 [-0.01125, -0.00581]", "0"],
+    ["OLMo-2-1124-7B-Instruct", "SAME/DIFFERENT with correction", 256, "0.02658 [0.02499, 0.02816]", "-0.03626 [-0.04480, -0.02763]", "0"],
+]
+
 with gr.Blocks(title="Causal History Benchmark") as demo:
     gr.Markdown(
         """
@@ -33,6 +42,36 @@ The confirmed result is simple: **how the rule was learned earlier still changed
         value=RESULTS,
         interactive=False,
         label="Frozen v11 results",
+    )
+
+    gr.Markdown("## Separate OLMo-2 extension\n\nThe hidden-state endpoint was positive. The full-logit interval includes zero, so it is recorded as inconclusive. This extension does not change the frozen v11 results.")
+    gr.Dataframe(
+        headers=[
+            "Model",
+            "Task",
+            "Episodes",
+            "Hidden-state movement",
+            "Full-logit movement",
+            "Distance after bridge cut",
+        ],
+        value=EXTENSION_RESULTS,
+        interactive=False,
+        label="Separate extension result",
+    )
+
+    gr.Markdown("## Multi-event correction extension\n\nAn explicit correction event was inserted before the final test. The hidden-state endpoint stayed above zero in both runs. The complete next-token logit endpoint did not. These results are separate from the frozen v11 table.")
+    gr.Dataframe(
+        headers=[
+            "Model",
+            "Task",
+            "Episodes",
+            "Hidden-state movement",
+            "Full-logit movement",
+            "Distance after full cut",
+        ],
+        value=CORRECTION_RESULTS,
+        interactive=False,
+        label="Multi-event correction results",
     )
 
     gr.Markdown(

@@ -1,0 +1,36 @@
+{
+  "analysis_version": "chb-multi-event-correction-analysis-v1",
+  "episodes": 256,
+  "full_cut_hidden_zero": true,
+  "full_cut_logit_zero": true,
+  "hidden_full_cut_distance_mean": 0.0,
+  "hidden_net": {
+    "ci95": [
+      0.024987260902716413,
+      0.028156383601199764
+    ],
+    "mean": 0.0265801180514742
+  },
+  "hidden_positive_fraction": 1.0,
+  "hidden_route_distance_after_correction_mean": 0.2533607739023864,
+  "hidden_second_bridge_cut_distance_mean": 0.2205819030641578,
+  "logit_full_cut_distance_mean": 0.0,
+  "logit_net": {
+    "ci95": [
+      -0.04480158868901185,
+      -0.02763347798767768
+    ],
+    "mean": -0.03626078265057231
+  },
+  "logit_positive_fraction": 0.34375,
+  "logit_route_distance_after_correction_mean": 274.15319722890854,
+  "logit_second_bridge_cut_distance_mean": 250.59630152583122,
+  "manifest_sha256": "e455378ee4c75ef0533261ea1e3445bbb47613f02c1395bd37f9c0127d9daea4",
+  "model": "allenai/OLMo-2-1124-7B-Instruct",
+  "protocol_sha256": "dd4d0e9e597bce96c3ca1674a0d71bd41234fa82fff940693c1a3d0c21939661",
+  "reported_result_matches": true,
+  "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+  "runner_sha256": "5c0d6e0d9b6731b81803c70ce3a7f88e0ae11339795551c409a7166e3d7118d0",
+  "status": "analysed",
+  "task": "same_different"
+}
