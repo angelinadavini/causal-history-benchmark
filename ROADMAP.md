@@ -1,90 +1,96 @@
 # Roadmap
 
-## 1. Freeze the confirmatory benchmark
+The first frozen confirmatory benchmark has passed. The priority now is reuse, independent replication, and architecture coverage.
 
-Before the main confirmatory run:
+## 1. Make the benchmark easy to run
 
-- freeze acquisition templates;
-- freeze task families;
-- freeze model list;
-- freeze bridge text;
-- freeze intervention layers and outcome layers;
-- freeze exclusion rules;
-- freeze statistics and equivalence bounds;
-- generate fresh untouched random seeds.
+Current public pieces:
 
-Development runs already influenced design choices. They will remain development data.
+- benchmark contract;
+- compact Qwen reference implementation;
+- confirmed Qwen and Mistral results;
+- machine-readable confirmatory summary;
+- quickstart;
+- contribution guide;
+- public replication leaderboard.
 
-## 2. Confirm Qwen result on fresh seeds
+Next packaging work:
 
-Primary confirmatory checks:
+- publish the exact frozen confirmatory runners and manifests;
+- add a small command-line wrapper that writes a standard result JSON;
+- add automated preflight checks for token boundaries and supported cache APIs;
+- add a reproducible environment container.
 
-- SAME/DIFFERENT task;
-- DAX/WUG mapping task;
-- held-out surface wording;
-- cross-route interchange;
-- same-route control;
-- norm-matched random control;
-- output/logit mediation;
-- finer layer localization.
+## 2. Independent model-family replications
 
-## 3. Cross-model replication
+High-value targets:
 
-Target at least three independent model families where technically practical:
+- Gemma;
+- Llama-family models;
+- additional Qwen and Mistral sizes;
+- other open decoder-only models.
 
-- Qwen;
-- Mistral;
-- Gemma or Llama-family model.
+The main goal is to learn where the effect replicates, where it weakens, and where it fails under working controls.
 
-Quantized and full-precision runs should be distinguished explicitly.
+## 3. Leave transformer K/V
 
-## 4. Architecture comparison
+The strongest extension is an architecture whose continuing state is not transformer K/V.
 
-The longer-term benchmark should compare different ways of carrying history:
+Targets include:
 
-- standard decoder-only Transformer K/V state;
-- recurrent or state-space models;
-- memory-augmented systems;
-- trained compression systems such as memento-style architectures.
+- state-space language models;
+- recurrent language models;
+- explicit-memory systems;
+- trained context-compression systems;
+- multimodal agents with persistent internal state.
 
-The question is whether route-specific causal history behaves differently when a system has a stronger built-in mechanism for carrying state forward.
+The state object can change. The causal question stays the same.
 
-## 5. Source attribution
+## 4. New acquisition histories
 
-The first verbal source-report test showed a strong answer bias and is rejected as evidence.
+Examples versus direct instruction is the first controlled route pair.
 
-A better measure should:
+Future benchmark modules can test:
 
-- counterbalance source labels;
-- avoid obvious semantic priors such as "examples" versus "rule";
-- use forced-choice token calibration;
-- measure source judgement after the later-event measure;
-- test whether source judgement tracks the objectively manipulated history.
+- observation versus explicit instruction;
+- self-generated inference versus supplied conclusion;
+- retrieved context versus internally learned relation;
+- correction versus first acquisition;
+- demonstration sequence variants that end with the same usable rule.
 
-## 6. Public benchmark package
+Each module must preserve a clean current-content control.
 
-Planned release artifacts:
+## 5. Time and interference
 
-- Hugging Face dataset with generated benchmark episodes;
-- dataset card;
-- exact experiment configs;
-- model-support table;
-- frozen result files;
-- reproducibility scripts;
-- tagged GitHub release;
-- archival DOI.
+Test whether route-dependent causal history survives:
 
-## 7. Paper boundary
+- longer token delays;
+- unrelated intervening events;
+- competing relations;
+- context compression;
+- state resets;
+- memory retrieval boundaries.
 
-The conference paper should stay short.
+## 6. Source attribution
 
-The main text should carry:
+The first verbal source-report instrument failed through response bias and is excluded.
 
-- the contribution;
-- why it matters;
-- nearest prior work;
-- exact experimental logic;
-- decisive results;
-- limits of inference.
+A replacement should use bias-resistant response coding, tokenizer preflight, counterbalanced labels, and measurement after the later-event endpoint.
 
-The public repository should carry the larger research trail, failed tests, extended controls, code, and full benchmark documentation.
+## 7. Public distribution
+
+The repository should remain the canonical development home.
+
+Planned distribution layers:
+
+- Hugging Face benchmark dataset and dataset card;
+- standard model-result JSON files;
+- tagged GitHub releases;
+- archival DOI for frozen benchmark versions;
+- community leaderboard linked to reproducible code.
+
+The aim is for researchers to run the benchmark without needing the paper.
+
+## 8. Publication
+
+Conference publication remains useful for peer review and formal argument. The benchmark should remain usable even if a reader never opens the paper.
