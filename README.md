@@ -1,38 +1,47 @@
 # Causal History Benchmark
 
-**Does learning the same information in a different way leave a state that changes what a model does later?**
+**If a model has the same rule in front of it now, can the way it learned that rule earlier still change what it does next?**
 
-The Causal History Benchmark (CHB) tests that question directly.
+That is what the Causal History Benchmark tests.
 
-A model gets the same rule in two ways: from examples or from a direct instruction. The original examples or instruction are removed from the stored source state. The rule is supplied again during a later event, so the model has the same current task information in both conditions. A short fixed bridge is the only state left that depends on how the rule was learned earlier.
+In one run, the model learns a rule from examples. In another, it is told the same rule directly. We remove the original examples or instruction from the stored source state. The model gets the same rule again and the same kind of new task.
 
-CHB moves that bridge state between the two learning conditions and measures what changes later. It also blocks later access to the bridge. A valid result therefore has to show more than a readable history signature: changing the retained state must change later processing, and the path check must behave as predicted.
+At that point, the current information is the same. What differs is how the rule was learned earlier.
 
-## Confirmed v11 result
+CHB tests whether that earlier difference is still doing anything. It moves the stored bridge state from one learning condition into the other and measures what happens later. It also blocks the later query from using the bridge. If the bridge is carrying the effect, moving it should move the later computation and blocking it should remove the difference.
 
-All three frozen confirmatory arms passed.
+## What we found
 
-| Arm | Model | Task | Episodes | Hidden-state movement | Full-logit movement |
+All three frozen confirmatory tests passed.
+
+| Test | Model | Task | Episodes | Hidden-state movement | Full-logit movement |
 | --- | --- | --- | ---: | ---: | ---: |
 | Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | **0.68747** [0.68661, 0.68832] | **0.25833** [0.25555, 0.26109] |
-| Cross-model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | **0.80099** [0.79955, 0.80245] | **0.05865** [0.05681, 0.06056] |
+| Second model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | **0.80099** [0.79955, 0.80245] | **0.05865** [0.05681, 0.06056] |
 | Second task | Qwen2.5-3B-Instruct | DAX/WUG | 256 | **0.60515** [0.60352, 0.60679] | **0.04717** [0.04335, 0.05106] |
 
-The reported value is movement toward the opposite learning history after subtracting the matched same-history control. Removing later access to the bridge reduced the measured route distance to **zero in hidden-state and full-logit space in all three arms**.
+The numbers show movement toward the state produced by the other learning history after subtracting the matched same-history control.
 
-The machine result is:
+When the later query could no longer use the bridge, the measured difference fell to **zero in all three tests**, in both hidden-state and full-logit space.
 
-> How the same information was learned earlier remained in a retained bridge state after the original source state was neutralised. Moving that state changed a later hidden state and the complete next-token output distribution after the current rule was supplied again. The result replicated in another model family and another task. Blocking later access to the bridge removed the measured history difference.
+The result is simple:
 
-CHB measures this causal-history effect. It is not a consciousness score.
+> The way the model learned the same information earlier changed what happened later. The original teaching information was gone. The current rule was the same. Moving the state left by the earlier learning moved the later computation. Blocking access to that state removed the difference.
 
-## Install
+CHB measures that effect. It does not assign a consciousness score.
 
-For the benchmark utilities and tests:
+## Run it
+
+Clone the repo:
 
 ```bash
 git clone https://github.com/angelinadavini/causal-history-benchmark.git
 cd causal-history-benchmark
+```
+
+Install the benchmark and tests:
+
+```bash
 pip install -e ".[test]"
 pytest -q
 ```
@@ -44,11 +53,7 @@ pip install -e ".[benchmark,test]"
 chb-validate
 ```
 
-The general benchmark package keeps the public API separate from the exact frozen confirmatory environment. The pinned v11 software record is preserved under `confirmatory/`.
-
-## Run a small reference test
-
-The compact public runner implements source neutralisation, bridge K/V interchange, current-rule resupply, and the matched same-history control.
+Run the small Qwen reference test:
 
 ```bash
 python scripts/run_benchmark.py \
@@ -56,74 +61,70 @@ python scripts/run_benchmark.py \
   --reps 16
 ```
 
-This is the small reusable reference test. The frozen v11 result used prespecified model revisions, seeds, episode counts, task wording, intervention layers, analysis rules, and tokenizer checks recorded in the confirmatory archive.
+This small run uses the same core idea as the confirmed experiment. The exact v11 study used frozen model versions, seeds, wording, layer choices, analysis rules, and tokenizer checks. Those records are kept under [`confirmatory/`](confirmatory/).
 
-## What a benchmark-valid result needs
+## What has to be true for a CHB result to count
 
-A submitted result should report all of these:
+A positive number on its own is not enough.
 
-1. **Same information, different learning route.** The target relation must be matched across the two acquisition conditions.
-2. **Original source neutralised.** The later effect cannot depend on directly rereading the original examples or instruction.
-3. **Current information supplied again.** Both conditions receive the same usable task information during the later event.
-4. **Matched same-route control.** Cross-route movement is compared with a donor from the same route.
-5. **Causal state intervention.** Decoding route information is not enough. The retained state must be changed directly.
-6. **Later hidden-state and output measurement.** CHB reports movement in a fixed later hidden state and the complete next-token logit vector.
-7. **Path check.** Later access to the proposed carrier is removed to test whether the measured history difference depends on that path.
+1. The model must get the same rule through two different learning routes.
+2. The original examples or instruction must be removed before the later test.
+3. Both conditions must get the same current rule again.
+4. The cross-history swap must be compared with a same-history swap.
+5. The stored history state must be changed directly. Reading it with a probe is not enough.
+6. The later hidden state and full next-token output must be measured.
+7. The proposed path must be cut. If the effect really depends on that path, the difference should disappear or fall as predicted.
 
-The machine-readable result contract is in [`results/result_schema.json`](results/result_schema.json).
+The machine-readable result format is in [`results/result_schema.json`](results/result_schema.json).
 
-## Frozen v11 values from Python
+## Test your own model
+
+The benchmark is not meant to stop with Qwen and Mistral.
+
+You can test another transformer, a recurrent model, a state-space model, an agent, or another system with a state that can carry earlier information forward.
+
+The exact internal state may be different. The question stays the same:
+
+> After the old source is gone and the same information is available now, does the way the model learned it earlier still change what happens next?
+
+A new result should include the exact model version, tokenizer, task, learning routes, source-removal method, state that was moved, where it was moved, same-history control, path check, software versions, hardware, and a machine-readable result file.
+
+See [`QUICKSTART.md`](QUICKSTART.md) for the shortest route and [`CONTRIBUTING.md`](CONTRIBUTING.md) if you want to add a result to the public leaderboard.
+
+## See the confirmed v11 values
 
 ```bash
 chb-v11
 ```
 
-The package exposes the exact v11 endpoint values, job IDs, and path-check values used in the public result record.
+This prints the frozen endpoint values, job IDs, and bridge-cut results stored with the package.
 
-## Add another model
+## What is in this repo
 
-CHB is intended to grow beyond Qwen and Mistral. A new model result should include:
+- [`BENCHMARK.md`](BENCHMARK.md) — exactly what the test does and what controls are required
+- [`RESULTS.md`](RESULTS.md) — the frozen v11 results, including failed and secondary endpoints
+- [`QUICKSTART.md`](QUICKSTART.md) — how to run the small reference test
+- [`LEADERBOARD.md`](LEADERBOARD.md) — confirmed results and future replications
+- [`MODEL_SUPPORT.md`](MODEL_SUPPORT.md) — models tested so far
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to add a model result
+- [`confirmatory/`](confirmatory/) — frozen v11 protocol records and hashes
+- [`configs/`](configs/) — machine-readable definitions of the three confirmed arms
+- [`src/causal_history/`](src/causal_history/) — reusable Python code
+- [`tests/`](tests/) — package tests
+- [`results/confirmatory_summary.csv`](results/confirmatory_summary.csv) — frozen result table
+- [`results/result_schema.json`](results/result_schema.json) — format for new results
 
-- exact model and revision;
-- tokenizer and software versions;
-- task and acquisition routes;
-- source-neutralisation method;
-- bridge or other retained carrier definition;
-- intervention layers or state location;
-- outcome location;
-- cross-route movement;
-- same-route control movement;
-- path-check result;
-- hardware;
-- complete machine-readable result file.
+## Why I made it public
 
-The current result schema is architecture-aware without treating transformer K/V as the only possible carrier. A recurrent model, state-space model, or another architecture can use a different state intervention if it answers the same causal question and reports the required controls.
+A paper can report the first result. The useful part should not end with the paper.
 
-## Repository map
+I built CHB so other researchers can run the same question on another model, change the kind of learning history, test longer delays, use another way of moving internal state, or see whether the effect exists outside transformer K/V state.
 
-- [`BENCHMARK.md`](BENCHMARK.md) — benchmark contract and required controls
-- [`RESULTS.md`](RESULTS.md) — frozen v11 results and preserved failures
-- [`QUICKSTART.md`](QUICKSTART.md) — compact runner instructions
-- [`LEADERBOARD.md`](LEADERBOARD.md) — confirmed and community model results
-- [`MODEL_SUPPORT.md`](MODEL_SUPPORT.md) — current model support
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to submit a replication
-- [`confirmatory/`](confirmatory/) — frozen protocol provenance
-- [`configs/`](configs/) — machine-readable confirmatory arm definitions
-- [`src/causal_history/`](src/causal_history/) — reusable metric, task, schema, and v11 utilities
-- [`scripts/reference_interchange.py`](scripts/reference_interchange.py) — compact model experiment
-- [`tests/`](tests/) — benchmark utility tests
-- [`results/confirmatory_summary.csv`](results/confirmatory_summary.csv) — frozen endpoint table
-- [`results/result_schema.json`](results/result_schema.json) — result submission schema
-
-## Why this exists independently of a paper
-
-A paper reports one use of the method. The benchmark is meant to be run again.
-
-Researchers can test another model, replace K/V interchange with another causal intervention, add longer delays, use different acquisition histories, or ask whether the same effect appears outside decoder-only transformers. Future results can be compared against the same experimental question and control structure.
+If you use the benchmark, extend it, or test another model, I want the result to be directly comparable with what is already here.
 
 ## Citation
 
-GitHub exposes the repository citation through [`CITATION.cff`](CITATION.cff).
+Citation information is in [`CITATION.cff`](CITATION.cff).
 
 ## Author
 
