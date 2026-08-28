@@ -1,6 +1,8 @@
 # Quickstart
 
-## 1. Install
+This is the shortest way to run the public reference test.
+
+## 1. Install it
 
 A CUDA-capable GPU is recommended.
 
@@ -9,76 +11,76 @@ git clone https://github.com/angelinadavini/causal-history-benchmark.git
 cd causal-history-benchmark
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[benchmark,test]"
 ```
 
-## 2. Run the compact Qwen reference experiment
+Check that the package is installed:
 
 ```bash
-python scripts/reference_interchange.py \
+chb-validate
+```
+
+## 2. Run the small Qwen test
+
+```bash
+python scripts/run_benchmark.py \
   --model Qwen/Qwen2.5-3B-Instruct \
-  --reps 16 \
-  --patched-layers 6 \
-  --outcome-layer 8
+  --reps 16
 ```
 
-The script prints JSON containing:
+What the script does:
 
-- `n_pairs` — paired episodes tested;
-- `bridge_tokens` — number of fixed bridge tokens;
-- `patched_layers` — bridge K/V layers interchanged;
-- `outcome_layer` — later hidden layer measured;
-- `cross_projection_mean` — movement caused by the opposite-route donor;
-- `same_route_control_mean` — movement caused by a matched donor from the same route;
-- `cross_positive_fraction` — fraction of pairs moving in the predicted direction.
+1. The model learns the same rule from examples or from a direct instruction.
+2. The original teaching state is replaced with neutral state.
+3. The rule is given again during the later task.
+4. The bridge state is moved between the two learning conditions.
+5. A same-history swap is run as the control.
+6. The script measures how far the later hidden state moves toward the other learning history.
 
-The useful comparison is the cross-route intervention against the same-route control.
+The output is JSON so it can be saved, compared, or added to a larger benchmark run.
 
-## 3. Understand the manipulation
+The main fields are:
 
-The reference task has two routes to the same SAME/DIFFERENT relation.
+- `cross_projection_mean` — how far the later state moved after a bridge state from the other learning history was inserted;
+- `same_route_control_mean` — how far it moved after a bridge state from the same learning history was inserted;
+- `cross_positive_fraction` — how often the cross-history swap moved in the predicted direction.
 
-```text
-examples history ---------> fixed bridge
-                                |
-direct instruction -------> fixed bridge
-                                |
-source prefix replaced by neutral state
-                                |
-current relation supplied again
-                                |
-new event
-```
+The cross-history result should be judged against the same-history control.
 
-The benchmark then swaps early bridge K/V between the two histories and measures the later event.
-
-The source prefix has already been neutralised, and the later query already states the current relation. The intervention therefore asks whether acquisition route remains causally active beyond the current task content.
-
-## 4. Run another compatible decoder model
-
-Start with the same script:
+## 3. See the frozen v11 numbers
 
 ```bash
-python scripts/reference_interchange.py --model YOUR_MODEL_ID
+chb-v11
 ```
 
-Before interpreting a result, check:
+This prints the three confirmed v11 arms, their endpoint values, job IDs, and bridge-cut results.
 
-- the model supports `DynamicCache` or adapt the cache code explicitly;
-- the model solves the later task under both routes;
-- bridge token boundaries are correct for its tokenizer;
-- the chosen later layer exists;
-- the source-neutralisation step works as intended;
-- same-route replacement remains a small control;
-- answer strings are tokenised correctly in context.
+The small public run is for trying the method. The frozen v11 study used fixed seeds, model versions, wording, layer choices, tokenizer checks, and analysis rules recorded under [`confirmatory/`](confirmatory/).
 
-Model-specific layer choices should be fixed before a confirmatory run.
+## 4. Try another model
 
-## 5. Submit a replication
+Start with:
 
-Open a pull request that adds one row to [LEADERBOARD.md](LEADERBOARD.md) and includes a reproducible result file.
+```bash
+python scripts/run_benchmark.py --model YOUR_MODEL_ID
+```
 
-Use a compact JSON record such as:
+Before you trust the result, check these things:
+
+- the model can run the later task;
+- the tokenizer keeps the prompt and answer boundaries you expect;
+- the source-removal step actually removes the original teaching state;
+- the state you plan to move exists where you think it does;
+- the later layer or state you want to measure exists;
+- the same-history swap stays small enough to act as a useful control.
+
+If the model does not use transformer K/V state, change the intervention to the kind of state that model actually carries forward. Keep the experimental question the same.
+
+## 5. Add your result
+
+If you run CHB on another model, save enough information for somebody else to reproduce it.
+
+At minimum include:
 
 ```json
 {
@@ -87,7 +89,7 @@ Use a compact JSON record such as:
   "task": "SAME_DIFFERENT",
   "n_pairs": 256,
   "retained_state": "bridge KV",
-  "intervention": "opposite-route interchange",
+  "intervention": "cross-history bridge swap",
   "cross_route_movement": 0.42,
   "same_route_control": 0.01,
   "path_removal_ratio": 0.00,
@@ -97,12 +99,31 @@ Use a compact JSON record such as:
 }
 ```
 
-Include the exact runner or patch used for that architecture.
+Add the exact script or patch you used for that model.
 
-## 6. Non-K/V architectures
+Open a pull request with the result file and a new row for [`LEADERBOARD.md`](LEADERBOARD.md).
 
-The benchmark question is broader than transformer cache state.
+## The experiment in one picture
 
-For a recurrent network, state-space model, memory-augmented model, or agent, identify the native state that carries earlier history. Remove the original source, supply the current relation again, intervene on the retained state, and test the later event.
+```text
+same rule
+   |
+   +-- learned from examples
+   |
+   +-- stated directly
+             |
+             v
+       same bridge text
+             |
+   original source removed
+             |
+       same rule given again
+             |
+             v
+      move bridge state
+             |
+             v
+   measure what changes later
+```
 
-The state object may change. The causal contract in [BENCHMARK.md](BENCHMARK.md) should remain explicit.
+That is CHB. The rest of the repository exists to make this comparison controlled, repeatable, and easy to extend.
