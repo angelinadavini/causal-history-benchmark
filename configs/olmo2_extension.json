@@ -1,0 +1,12 @@
+{
+  "arm": "olmo2_extension",
+  "model": "allenai/OLMo-2-1124-7B-Instruct",
+  "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+  "task": "same_different",
+  "episodes": 256,
+  "seed": 20260828,
+  "patched_layers": [0, 1, 2, 3, 4, 5],
+  "outcome_layer": 8,
+  "status": "frozen_before_run",
+  "interpretation": "third-family extension; separate from frozen v11"
+}

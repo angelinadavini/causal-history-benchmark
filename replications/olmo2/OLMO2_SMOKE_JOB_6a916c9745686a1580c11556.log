@@ -1,0 +1,19 @@
+Job: 6a916c9745686a1580c11556
+Purpose: free/preflight GPU smoke test for an OLMo-2 third-family extension.
+Status: completed successfully.
+Model: allenai/OLMo-2-1124-7B-Instruct
+Revision: 470b1fba1ae01581f270116362ee4aa1b97f4c84
+GPU: NVIDIA A10G
+Transformers: 5.13.0
+Torch: 2.6.0+cu124
+Cache: DynamicCache
+Layers: 32
+Hidden size: 4096
+Bridge tokens: 5
+Max history: 36
+Episodes: 4 paired episodes (engineering smoke only)
+
+Final JSON:
+{"mean_hidden_net": 0.5907398182680481, "mean_logit_net": 0.19909451031708159, "n_pairs": 4, "rows": [{"bit": 0, "episode": 0, "hidden_cross": 0.5712262690067291, "hidden_cut_distance": 0.0, "hidden_net": 0.5676393755711615, "hidden_route_distance": 0.49748992919921875, "hidden_same": 0.0035868934355676174, "logit_cross": 0.03839500993490219, "logit_cut_distance": 0.0, "logit_net": 0.038308712653815746, "logit_route_distance": 198.0584716796875, "logit_same": 8.629728108644485e-05, "mode": 0}, {"bit": 1, "episode": 1, "hidden_cross": 0.5998570919036865, "hidden_cut_distance": 0.0, "hidden_net": 0.6016714982688427, "hidden_route_distance": 0.47411689162254333, "hidden_same": -0.0018144063651561737, "logit_cross": -0.35832469165325165, "logit_cut_distance": 0.0, "logit_net": -0.3750556483864784, "logit_route_distance": 116.39002227783203, "logit_same": 0.016730956733226776, "mode": 0}, {"bit": 0, "episode": 2, "hidden_cross": 0.5942720472812653, "hidden_cut_distance": 0.0, "hidden_net": 0.593308109237114, "hidden_route_distance": 0.4829964339733124, "logit_cross": -0.2167910635471344, "logit_cut_distance": 0.0, "logit_net": -0.2135338120860979, "logit_route_distance": 103.8571548461914, "logit_same": -0.0032572514610365033, "mode": 1}, {"bit": 1, "episode": 3, "hidden_cross": 0.6013830602169037, "hidden_cut_distance": 0.0, "hidden_net": 0.6003402899950743, "hidden_route_distance": 0.46857818961143494, "hidden_same": 0.0010427702218294144, "logit_cross": 1.342253029346466, "logit_cut_distance": 0.0, "logit_net": 1.346658789087087, "logit_route_distance": 154.69015502929688, "logit_same": -0.004405759740620851, "mode": 1}]}
+
+Interpretation: all apparatus checks passed, including model loading, task tokenisation, source neutralisation, bridge interchange, hidden-state measurement, complete-logit measurement, same-history control, and bridge path cut. This is an engineering smoke result, not a confirmatory scientific result.

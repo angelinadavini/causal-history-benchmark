@@ -8,3 +8,6 @@ results/raw/
 checkpoints/
 *.pt
 *.bin
+# Keep local reproduction output and private science files out of commits.
+v11-reproduction-output/
+private-science/
