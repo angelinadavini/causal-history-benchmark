@@ -1,97 +1,134 @@
 # Causal History Benchmark
 
-**Does the way a model learned something leave a causal trace that changes later processing?**
+**Does the way a model learned the same information leave a causal trace that changes what the model does later?**
 
-The Causal History Benchmark tests whether the same usable information, acquired through different routes, leaves different retained states inside a language model.
+The Causal History Benchmark is a mechanistic benchmark for testing acquisition history in language models.
 
-The first experiments compare two acquisition histories:
+Two runs end with the same usable task relation. One model history learned that relation from examples. The other received it directly. The original source-history state is then replaced with neutral state. The current relation is supplied again during a later event. A short fixed bridge is the only route-dependent state left from the earlier event.
 
-- learning a rule from examples;
-- receiving the same rule directly.
+The benchmark asks whether changing that retained bridge state changes the later computation.
 
-After acquisition, the original source state is replaced with neutral state. A short fixed bridge remains:
+## Confirmed result
 
-> History processed. Ready.
+The frozen confirmatory study passed in three arms:
 
-The current rule is supplied again during the later task. This makes the later task solvable without recovering the old source. We then ask whether the earlier acquisition route still changes the model's internal processing of the new event.
+| Arm | Model | Task | Episodes | Later hidden-state movement | Complete-logit movement |
+| --- | --- | --- | ---: | ---: | ---: |
+| Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | **0.68747** [0.68661, 0.68832] | **0.25833** [0.25555, 0.26109] |
+| Cross-model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | **0.80099** [0.79955, 0.80245] | **0.05865** [0.05681, 0.06056] |
+| Second task | Qwen2.5-3B-Instruct | DAX/WUG | 256 | **0.60515** [0.60352, 0.60679] | **0.04717** [0.04335, 0.05106] |
 
-## What the current experiments show
+Values are net recipient-to-donor route-axis movement after subtracting the matched same-route donor control. Every hidden-state endpoint was positive in every episode. The full-logit endpoint was positive in every Qwen primary and Mistral episode and in 89.45% of DAX/WUG episodes.
 
-Development experiments currently support four findings.
+Removing later-event attention to the bridge reduced the measured route distance to **zero in every confirmatory arm**.
 
-1. **Acquisition route remains recoverable after the original source state is neutralized.** In Qwen2.5-3B-Instruct, later hidden states identify whether the earlier rule came from examples or direct instruction with high accuracy in early and middle processing layers.
+The confirmed machine claim is simple:
 
-2. **The retained route state has a causal effect on later processing.** Replacing bridge K/V state from one route with bridge K/V state from the other moves the later hidden state toward the donor route.
+> Acquisition route can remain as a causal machine state after the original source state is neutralised and the current relation is supplied again. Interchanging that retained state changes a later hidden representation and the complete next-token output distribution.
 
-3. **The effect survives surface changes.** A direction learned from three acquisition templates transfers to a held-out fourth template. In the strongest Qwen development test, the donor-route intervention moved 100% of layer-8 cases toward the donor history while matched random directions were far weaker.
+The result does not establish consciousness.
 
-4. **The effect appears in more than one model family.** In Mistral-7B-Instruct-v0.3, replacing early bridge K/V state moved the later layer-7 state **0.809** of the way toward the donor route on average. A same-route control moved it **0.031**. All 64 cross-route pairs moved in the predicted direction.
+## Run the benchmark
 
-A second Qwen task using arbitrary DAX/WUG mappings also replicated the causal effect:
+Clone the repository and install the pinned dependencies:
 
-- cross-route movement: **0.569**;
-- same-route control: **0.0013**;
-- positive direction: **64/64 pairs**.
+```bash
+git clone https://github.com/angelinadavini/causal-history-benchmark.git
+cd causal-history-benchmark
+pip install -r requirements.txt
+```
 
-These are development results. Confirmatory runs with frozen seeds, analysis, models, and intervention choices are still required.
+Run the compact reference experiment on Qwen:
 
-## What this benchmark measures
+```bash
+python scripts/reference_interchange.py --model Qwen/Qwen2.5-3B-Instruct --reps 16
+```
 
-The benchmark separates several questions that are often collapsed into "memory":
+The reference script tests the core intervention with source-prefix neutralisation, bridge K/V interchange, a later event with current task information supplied again, and a same-route donor control.
 
-- Is information present in the retained state?
-- Can the model use that information?
-- Does the route by which the information entered remain represented?
-- Does that route-specific state causally change a later event?
-- Does the effect survive after the original source is unavailable?
-- Does the effect generalize across tasks, wording, models, and architectures?
+See [QUICKSTART.md](QUICKSTART.md) for the result fields and how to test another compatible decoder model.
 
-## What this project does not claim
+## Add your model
 
-This project does not provide a consciousness detector.
+The benchmark is meant to be run on other models and architectures. If you test a model, open a pull request with:
 
-A causal history effect in a language model does not establish phenomenal consciousness. The benchmark measures a machine property that can be compared with established work on human conscious processing, memory, report, and source attribution.
+- model name and exact revision;
+- tokenizer revision;
+- task and acquisition routes;
+- bridge definition;
+- intervention layers and outcome layer;
+- cross-route and same-route movement;
+- source-neutralisation check;
+- hardware and software versions.
 
-## Current benchmark structure
+Results that satisfy the benchmark controls can be added to [LEADERBOARD.md](LEADERBOARD.md).
+
+## What is being measured
+
+The benchmark keeps several questions separate:
+
+- Does earlier information remain in state?
+- Is that state used by later computation?
+- Does acquisition route remain after current task content is supplied again?
+- Does changing the route-specific state change a later event?
+- Does the effect disappear when the later event loses access to the retained carrier?
+- Does the result replicate across tasks, models, wording, delays, and architectures?
+
+A probe that decodes route information is not enough. The central benchmark result requires a causal intervention.
+
+## Benchmark structure
 
 ```text
-acquisition route
+same relation
     |
-    +-- examples
+    +-- learned from examples
     |
-    +-- direct instruction
+    +-- supplied directly
             |
             v
 fixed bridge state
             |
-original source state neutralized
+source-history prefix replaced by neutral K/V
             |
             v
-new event with current task information supplied again
+current relation supplied again in a later event
             |
             v
-measure later hidden state / logits
+measure later hidden state + complete logits
             |
             v
-intervene on retained bridge state
+interchange retained bridge state across routes
+            |
+            v
+does the later computation move toward donor history?
 ```
-
-The key causal question is whether changing only the retained route-specific state changes later processing while current task content is held fixed.
 
 ## Repository map
 
-- [`BENCHMARK.md`](BENCHMARK.md) — benchmark definition and controls
-- [`RESULTS.md`](RESULTS.md) — current development results
-- [`HUGGINGFACE_JOBS.md`](HUGGINGFACE_JOBS.md) — compute-job provenance
-- [`CLAIM_LIMITS.md`](CLAIM_LIMITS.md) — what the results support and what they do not
-- [`ROADMAP.md`](ROADMAP.md) — confirmatory and cross-model plan
-- [`scripts/`](scripts/) — reference experiment code
+- [BENCHMARK.md](BENCHMARK.md) — benchmark contract and required controls
+- [RESULTS.md](RESULTS.md) — frozen confirmatory results and preserved failures
+- [QUICKSTART.md](QUICKSTART.md) — run the reference implementation
+- [LEADERBOARD.md](LEADERBOARD.md) — community replication table
+- [CONTRIBUTING.md](CONTRIBUTING.md) — how to submit a model result
+- [CLAIM_LIMITS.md](CLAIM_LIMITS.md) — exact supported and unsupported claims
+- [scripts/reference_interchange.py](scripts/reference_interchange.py) — compact runnable experiment
+- [results/confirmatory_summary.csv](results/confirmatory_summary.csv) — machine-readable v11 endpoint summary
 
-## Status
+## Why this exists independently of a paper
 
-**Development / pre-confirmatory.**
+A paper is one report of the benchmark. The benchmark itself is meant to be reused.
 
-The repository is public so the research record, benchmark design, failures, and code remain visible as the project develops. A later blinded conference submission will use a separate anonymous artifact and will not point reviewers to this named repository during review.
+A model developer can run it on a new model. A mechanistic-interpretability researcher can replace the K/V intervention with another causal method. A memory-system researcher can test longer delays. A state-space or recurrent-model researcher can ask whether the same history effect appears outside transformer K/V state.
+
+That makes the useful object the test and its controls, not a single publication.
+
+## Claim boundary
+
+The current confirmatory evidence covers two decoder-only transformer families and two synthetic relation tasks. It does not establish phenomenal consciousness, sentience, subjective continuity, a unique consciousness criterion, valid verbal source attribution, a robust overt-choice effect, or generality across architectures.
+
+## Citation
+
+GitHub exposes the repository citation through [CITATION.cff](CITATION.cff). Please cite the benchmark if you use its task, intervention, controls, or results.
 
 ## Author
 
@@ -99,6 +136,4 @@ Angelina Davini Hintsanen
 
 ## License
 
-Code: MIT License. See [`LICENSE`](LICENSE).
-
-Research results and documentation may be cited with the repository URL until a versioned archival DOI is issued.
+MIT License. See [LICENSE](LICENSE).
