@@ -1,92 +1,112 @@
-# Benchmark contract
+# What the Causal History Benchmark tests
 
-## Core question
+## The question
 
-Does acquisition history leave a causal trace after the original source is unavailable and the current task relation is supplied again?
+A model can know the same rule now and still have reached that point in different ways.
 
-## Acquisition variable
+CHB asks:
 
-The current benchmark uses two routes to the same functional relation:
+> After the original teaching information is gone and the same rule is supplied again, does the way the model learned it earlier still change what happens next?
 
-- **examples** — demonstrations from which the relation can be inferred;
-- **explicit** — the relation is stated directly.
+## The two learning routes
 
-The later task relation is the same across routes.
+The current benchmark uses two ways of learning the same rule:
 
-## Retained carrier
+- **examples** — the model works out the rule from demonstrations;
+- **direct instruction** — the rule is stated plainly.
 
-A fixed bridge follows the acquisition material:
+The rule itself is matched. The difference is how the model got it.
+
+## What remains after learning
+
+Both learning conditions end with the same short bridge text:
 
 > History processed. Ready.
 
-The bridge text is identical across routes.
+The words are identical in both conditions. The internal state attached to those words may differ because the model reached them through different learning histories.
 
-After acquisition, the source-history prefix is replaced with K/V state from a length-matched neutral history. Route-dependent bridge K/V remains from the real acquisition event.
+Before the later test, the K/V state for the original examples or instruction is replaced with K/V from a matched neutral history. The bridge state from the real learning event is kept.
 
-The later event receives the retained bridge state without direct access to the original examples or direct instruction.
+So the model cannot simply reread the original teaching material.
 
-## Later event
+## The later test
 
-The current task relation is supplied again during the later event.
+The rule is stated again during the later event.
 
-This is a central control. The later computation does not need the old source to recover which relation is currently in force. A remaining route effect therefore concerns history left by how that same relation was acquired.
+This means both conditions know the same rule at the time we measure them.
 
-## Causal intervention
+If they still differ, the difference cannot be explained by one condition having the rule and the other not having it.
 
-For paired runs with the same current relation and different acquisition histories, replace early bridge K/V in the recipient with bridge K/V from the opposite acquisition route.
+## The causal test
 
-For recipient vector `a`, unpatched opposite-route vector `b`, and intervened vector `z`, movement along the route axis is:
+We take the bridge K/V from one learning history and put it into the other condition.
+
+Then we measure a later hidden state and the full next-token logit vector.
+
+If the bridge carries a causal effect of the earlier learning history, moving that bridge state should move the later computation toward the condition it came from.
+
+For a recipient vector `a`, the unpatched opposite-history vector `b`, and the result after the bridge swap `z`, movement is measured as:
 
 ```text
 p(a,z,b) = ((z-a) · (b-a)) / (||b-a||² + 1e-9)
 ```
 
-Interpretation:
+A value of `0` means no movement toward the opposite history along that axis.
 
-- `0` — no movement from the recipient along the route axis;
-- `1` — full movement to the unpatched donor position on that axis;
-- values outside `[0,1]` are possible.
+A value of `1` means full movement to the unpatched opposite-history position on that axis.
 
-Both route directions are tested and averaged within each paired episode.
+Values below 0 or above 1 are possible.
 
-## Required controls
+We test both directions and average them within each paired episode.
 
-### Same-route donor
+## The controls
 
-Replace bridge K/V with an independent donor from the same acquisition route, same task content, and a different session nonce.
+### Same-history swap
 
-The reported net causal effect is:
+A bridge swap can change a model simply because state was replaced.
+
+So each cross-history swap is compared with a swap from another run that learned the rule in the same way.
+
+The reported net effect is:
 
 ```text
-cross-route movement - matched same-route movement
+cross-history movement - same-history movement
 ```
 
-### Source neutralisation
+### Remove the original source
 
-The source-history prefix must be replaced with neutral-history state before the later event.
+The original examples or instruction are replaced with neutral K/V before the later test.
 
-### Current-content control
+The later result therefore cannot come from directly rereading the original source state.
 
-The current task relation must be supplied again during the later event.
+### Give the rule again
 
-### Bridge-path check
+The same rule is supplied again during the later event.
 
-Remove later-event attention to every bridge position while leaving the current relation available in the later query.
+The test is therefore about whether the earlier learning history still changes the model after the current rule has been made the same.
 
-A route difference that survives this intervention cannot be attributed to the tested bridge path.
+### Cut access to the bridge
 
-### Tokenizer preflight
+We also stop the later event from attending to the bridge positions.
 
-Candidate answer strings must be tested in context for every pinned model/tokenizer and task. The original confirmatory launch exposed why bare-token assumptions are unsafe.
+If the measured history difference depends on that bridge, cutting access should remove or sharply reduce the difference.
 
-## Frozen confirmatory tasks
+In all three frozen v11 confirmatory tests, the measured hidden-state and full-logit route distance fell to zero when bridge access was removed.
+
+### Check tokenisation before running
+
+Answer strings can split differently across tokenizers and prompt contexts.
+
+That caused an invalid first confirmatory launch. The frozen protocol therefore checks candidate answers in context before a scientific run begins.
+
+## The two tasks used in v11
 
 ### SAME / DIFFERENT
 
 - SAME: 0 maps to 0 and 1 maps to 1.
 - DIFFERENT: 0 maps to 1 and 1 maps to 0.
 
-The current instruction is supplied again during the later event.
+The current SAME or DIFFERENT rule is stated again during the later event.
 
 ### DAX / WUG
 
@@ -95,55 +115,51 @@ The mapping is counterbalanced:
 - DAX -> X, WUG -> Y;
 - DAX -> Y, WUG -> X.
 
-The mapping is acquired from examples or direct instruction and is supplied again in the later event.
+The mapping is learned from examples or direct instruction and is stated again during the later event.
 
-## Frozen v11 arms
+## The frozen v11 tests
 
-| Arm | Model | Task | Paired episodes | Bridge layers | Later hidden layer |
+| Test | Model | Task | Paired episodes | Bridge layers moved | Later hidden layer |
 | --- | --- | --- | ---: | --- | ---: |
 | Primary | Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | 0–5 | 8 |
-| Cross-model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | 0–4 | 7 |
+| Second model | Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | 0–4 | 7 |
 | Second task | Qwen2.5-3B-Instruct | DAX/WUG | 256 | 0–5 | 8 |
 
-The primary endpoints are net route-axis movement of:
+The two main outcomes are movement of:
 
-1. the fixed later hidden state;
+1. the later hidden state;
 2. the complete next-token logit vector.
 
-The Qwen primary arm succeeds only when both two-sided 95% confidence intervals lie above zero.
+For the primary Qwen test, both frozen 95% confidence intervals had to be above zero.
 
-## Statistics
+## Statistics used in the frozen study
 
 The frozen analysis reports:
 
-- episode mean;
-- stratified bootstrap confidence interval with 10,000 resamples;
-- paired sign-flip value with 100,000 Monte Carlo draws;
-- positive-effect fraction.
+- the mean across episodes;
+- a stratified bootstrap 95% confidence interval using 10,000 resamples;
+- a paired sign-flip value using 100,000 Monte Carlo draws;
+- the fraction of episodes with a positive effect.
 
-Answer-margin and two-token-probability endpoints are secondary. Their equivalence rules are documented in [RESULTS.md](RESULTS.md).
+The answer-margin and two-token probability measures were secondary. Their frozen results are kept in [`RESULTS.md`](RESULTS.md).
 
-## What counts as a community benchmark result
+## If you test another model
 
-A submitted model result should report at minimum:
+Report enough information for another researcher to understand exactly what you did:
 
-- exact model and revision;
+- model and exact revision;
 - tokenizer revision;
-- acquisition route definitions;
-- task-content balancing;
-- source-neutralisation implementation;
-- retained carrier;
-- intervention locations;
-- later outcome location;
-- cross-route movement;
-- same-route donor movement;
-- bridge/path-removal control or an architecture-appropriate equivalent;
+- the two learning routes;
+- how task content was balanced;
+- how the original source was removed;
+- what state remained;
+- what state you moved or changed;
+- where you measured the later result;
+- cross-history movement;
+- same-history movement;
+- the path-cut result or the closest equivalent for that architecture;
 - random seeds;
 - software versions;
 - hardware.
 
-If an architecture does not use transformer K/V state, use the same causal question with its native retained state. Document what state was removed, what state remained, and what was intervened on.
-
-## Claim boundary
-
-A positive benchmark result establishes a causal history effect for the tested model, task, and state intervention. It does not establish phenomenal consciousness or a unique criterion for consciousness.
+A model does not need transformer K/V state to be tested with CHB. If it carries history in another kind of state, use that state and keep the same causal question.
