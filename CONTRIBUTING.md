@@ -1,46 +1,54 @@
-# Contributing a replication
+# Add a model result
 
-The main contribution this repository wants is a clean attempt to run the causal-history test on another model or architecture.
+The most useful contribution is simple: run the same question on another model and show exactly what happened.
 
-## Before running
+## Keep the question the same
 
-Read [BENCHMARK.md](BENCHMARK.md). Keep the scientific question fixed:
+Before you run anything, read [`BENCHMARK.md`](BENCHMARK.md).
 
-> After the same usable relation is acquired through different routes, does route-dependent retained state causally change a later event once the original source is unavailable and the current relation is supplied again?
+CHB asks:
 
-Do not begin with a consciousness label. Measure the machine state first.
+> After the old teaching information is gone and the same rule is available now, does the way the model learned that rule earlier still change what happens next?
 
-## Minimum experiment record
+You can change the model, task, internal state, or intervention method. Do not quietly change the question.
 
-Please preserve:
+## Save enough for someone else to check your run
 
-- model ID and exact revision;
+Keep:
+
+- model name and exact revision;
 - tokenizer revision;
 - software versions;
 - hardware;
-- acquisition prompts or generator;
-- later-event prompt or generator;
+- the two learning conditions;
+- the later task;
 - random seeds;
-- source-removal or neutralisation method;
-- retained state object;
-- intervention locations;
-- outcome location;
-- cross-route donor result;
-- matched same-route donor result;
-- path-removal result;
-- failures and deviations.
+- how you removed the original teaching state;
+- what state remained;
+- what state you moved or changed;
+- where you measured the later result;
+- cross-history result;
+- same-history control;
+- path-cut result;
+- anything that failed or had to be changed.
 
-## Positive controls
+## Make sure the setup works before calling a result negative
 
-A failed later-history test is interpretable only when the apparatus itself works.
+A model can fail because the experiment is broken.
 
-Check that the model can solve the current task, the intervention state exists, the later event can use the required current information, and the model/tokenizer handles the answer format correctly.
+Check that:
 
-If these controls fail, report an engineering failure instead of a scientific null.
+- the model can do the later task;
+- the tokenizer produces the answer boundaries you expect;
+- the state you want to move actually exists;
+- source removal works;
+- the later task still has the current rule it needs.
 
-## Pull request layout
+If one of those checks fails, report the setup failure. Do not call it evidence that the model lacks the effect.
 
-Add:
+## What to add to the repo
+
+Use this layout:
 
 ```text
 replications/<short-model-name>/README.md
@@ -48,16 +56,14 @@ replications/<short-model-name>/result.json
 replications/<short-model-name>/run.py
 ```
 
-Then add one row to [LEADERBOARD.md](LEADERBOARD.md).
+Then add one row to [`LEADERBOARD.md`](LEADERBOARD.md).
 
-The result JSON should identify every quantity needed to understand the leaderboard row.
+The README should explain the run in normal language. The JSON should contain the exact values. The script should be enough for another researcher to see how the result was produced.
 
-## Claims
+## Negative results are useful
 
-Describe what the intervention establishes in the tested system. Do not convert a causal-history result into a claim of consciousness, sentience, or phenomenal experience.
+If the setup worked and the history effect was absent, submit it.
 
-## Failed replications
+A clean negative result on another model or architecture is useful. It tells us where the effect does and does not appear.
 
-Failed replications are welcome when the controls passed. A clean null on a new architecture is scientifically useful.
-
-If the apparatus failed, document the failure clearly so another researcher does not repeat it.
+If the setup itself failed, document that too. Somebody else may be able to fix it instead of wasting time on the same problem.
