@@ -1,55 +1,60 @@
 # Causal History Benchmark leaderboard
 
-This table is for reproducible model and architecture replications.
+This page keeps results from models that have been tested with the same basic question:
 
-A row belongs here only when the submission documents source removal or neutralisation, the retained state, the cross-route intervention, and a matched control.
+> After the old teaching information is gone and the same rule is available now, does how the model learned it earlier still change what happens next?
+
+A result belongs here only if the run shows how the original source was removed, what state was left, what state was moved, what same-history control was used, and what happened when the proposed path was cut.
 
 ## Confirmed reference results
 
-| Model | Task | Pairs | Retained state | Later outcome | Net causal movement | Path-removal result | Status |
+| Model | Task | Pairs | State moved | Later measure | Net movement | After bridge cut | Status |
 | --- | --- | ---: | --- | --- | ---: | ---: | --- |
-| Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | bridge K/V, layers 0–5 | hidden layer 8 | **0.68747** | route distance -> 0 | frozen confirmatory |
-| Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | bridge K/V, layers 0–5 | complete next-token logits | **0.25833** | route distance -> 0 | frozen confirmatory |
-| Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | bridge K/V, layers 0–4 | hidden layer 7 | **0.80099** | route distance -> 0 | frozen confirmatory |
-| Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | bridge K/V, layers 0–4 | complete next-token logits | **0.05865** | route distance -> 0 | frozen confirmatory |
-| Qwen2.5-3B-Instruct | DAX/WUG | 256 | bridge K/V, layers 0–5 | hidden layer 8 | **0.60515** | route distance -> 0 | frozen confirmatory |
-| Qwen2.5-3B-Instruct | DAX/WUG | 256 | bridge K/V, layers 0–5 | complete next-token logits | **0.04717** | route distance -> 0 | frozen confirmatory |
+| Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | bridge K/V, layers 0–5 | hidden layer 8 | **0.68747** | distance -> 0 | frozen v11 |
+| Qwen2.5-3B-Instruct | SAME/DIFFERENT | 512 | bridge K/V, layers 0–5 | full next-token logits | **0.25833** | distance -> 0 | frozen v11 |
+| Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | bridge K/V, layers 0–4 | hidden layer 7 | **0.80099** | distance -> 0 | frozen v11 |
+| Mistral-7B-Instruct-v0.3 | SAME/DIFFERENT | 256 | bridge K/V, layers 0–4 | full next-token logits | **0.05865** | distance -> 0 | frozen v11 |
+| Qwen2.5-3B-Instruct | DAX/WUG | 256 | bridge K/V, layers 0–5 | hidden layer 8 | **0.60515** | distance -> 0 | frozen v11 |
+| Qwen2.5-3B-Instruct | DAX/WUG | 256 | bridge K/V, layers 0–5 | full next-token logits | **0.04717** | distance -> 0 | frozen v11 |
 
-## Community results
+## Results from other researchers
 
-No external replication has been accepted yet.
+No outside replication has been accepted yet.
 
-| Model / system | Architecture | Task | Retained state | Cross-route effect | Same-route control | Path-removal control | Code / result | Status |
-| --- | --- | --- | --- | ---: | ---: | ---: | --- | --- |
-| — | — | — | — | — | — | — | — | open |
+| Model / system | Task | State moved | Cross-history result | Same-history control | Path-cut result | Code / result | Status |
+| --- | --- | --- | ---: | ---: | ---: | --- | --- |
+| — | — | — | — | — | — | — | open |
 
-## Submit a result
+## Add your model
 
 Open a pull request with:
 
-1. an exact model ID and revision;
-2. tokenizer revision where relevant;
-3. task definition;
-4. acquisition routes;
-5. source-removal or neutralisation method;
-6. retained state definition;
-7. intervention locations;
-8. same-route donor control;
-9. path-removal or architecture-appropriate carrier check;
-10. seed and software manifest;
-11. a machine-readable result file;
-12. code needed to reproduce the row.
+- the exact model and revision;
+- tokenizer version if relevant;
+- the task;
+- the two learning routes;
+- how the original source was removed;
+- what state was kept;
+- what state was moved;
+- where the later result was measured;
+- cross-history result;
+- same-history control;
+- path-cut result;
+- seeds and software versions;
+- code and a machine-readable result file.
 
-Results that fail a positive control are still useful and may be documented in a separate failure table, though they will not be counted as evidence against causal history unless the apparatus itself worked.
+If the model passes all setup checks and shows no history effect, submit that too. A clean negative result belongs in the public record.
 
-## Architecture challenge
+If the setup fails before the scientific question is tested, document the failure separately so nobody mistakes it for a negative scientific result.
 
-The most valuable replications now are systems whose continuing state is not transformer K/V:
+## Models I especially want to see here
+
+The strongest next additions would come from systems that are different from the two transformer families already confirmed:
 
 - state-space models;
 - recurrent language models;
 - memory-augmented models;
 - multimodal agents with persistent internal state;
-- models with explicit learned compression or recurrent memory.
+- models with learned context compression or recurrent memory.
 
-For those systems, preserve the benchmark question and replace the carrier intervention with the native state object.
+Those systems do not need to use K/V. Test the state that actually carries their history and keep the same causal question.
