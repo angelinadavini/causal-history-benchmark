@@ -1,0 +1,12 @@
+name: Causal History Benchmark
+description: >
+  Tests whether the way the same information was learned earlier still changes
+  later model processing after the original source state is removed and the
+  same current rule is supplied again.
+evaluation_framework: causal-history-benchmark
+
+tasks:
+  - id: same_different_hidden
+  - id: same_different_full_logits
+  - id: dax_wug_hidden
+  - id: dax_wug_full_logits
